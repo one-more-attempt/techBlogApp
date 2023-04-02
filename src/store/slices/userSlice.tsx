@@ -16,13 +16,12 @@ export const userSlice = createSlice({
   reducers: {
     setIsLogined(state, action: PayloadAction<string>) {
       state.userName = action.payload;
-      state.userName = "";
-      state.isLogined = false;
+      state.isLogined = true;
     },
 
     setIsNotLogined(state) {
       state.userName = "";
-      state.isLogined = true;
+      state.isLogined = false;
     },
   },
 });
