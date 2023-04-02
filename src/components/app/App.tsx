@@ -19,15 +19,14 @@ export const App = () => {
         <Route path={ROUTES.MAIN} element={<MainPage />} />
         <Route path={ROUTES.REGISTRATION} element={<RegisterPage />} />
         <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
-
-
         //protected route!!!!
-        <Route path={ROUTES.ACCOUNT_SETTINGS} element={<AccountSettingsPage />} />
+        <Route
+          path={ROUTES.ACCOUNT_SETTINGS}
+          element={<AccountSettingsPage />}
+        />
         <Route path={ROUTES.NEW_POST} element={<NewArticlePage />} />
         <Route path={ROUTES.USER_PROFILE} element={<UserProfile />} />
-
-
-        <Route path="*" element={<PageNotFound />} />
+        <Route path={ROUTES.NOT_FOUND} element={<PageNotFound />} />
       </Routes>
     </Router>
   );
