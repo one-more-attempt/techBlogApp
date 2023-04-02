@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./registerPage.scss";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 // error?
 // response=> data => errors
@@ -38,10 +39,10 @@ export const RegisterPage = () => {
     axios
       .post(serverURL, userObj)
       .then(function (response: any) {
-        // console.log(response);
         setResponseFromServer(
-          `${response.data.user.username}successfully registered`
+          `${response.data.user.username} successfully registered`
         );
+        console.log(response);
       })
       .catch((error) => {
         let errmessage = "";
@@ -56,13 +57,15 @@ export const RegisterPage = () => {
 
   return (
     <div className="mainRegBlock">
+      <h1>
+        <Link to="/">{`Main page`}</Link>
+      </h1>
       <TextField
         id="outlined-basic"
         label="User name"
         variant="outlined"
         value={userNameInput}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          console.log(e.target.value);
           setUserName(e.target.value);
         }}
       />
@@ -72,7 +75,6 @@ export const RegisterPage = () => {
         variant="outlined"
         value={emailInput}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          console.log(e.target.value);
           setEmailInput(e.target.value);
         }}
       />
@@ -82,7 +84,6 @@ export const RegisterPage = () => {
         variant="outlined"
         value={passwordInput}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          console.log(e.target.value);
           setPasswordInput(e.target.value);
         }}
       />
