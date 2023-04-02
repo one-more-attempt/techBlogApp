@@ -13,5 +13,5 @@ import { SignInPage } from "../signInPage/signInPage";
 
 export const UserProfile = () => {
   const { userName } = useParams();
-  return <div>You logined as {userName}</div>;
+  return <div>You logined a{userName}</div>;
 };

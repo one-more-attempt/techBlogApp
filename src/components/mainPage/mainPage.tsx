@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ROUTE_PATH } from "../../routes/routePathes";
 const serverURL = "https://conduit.productionready.io/api/users/login";
 
 export const MainPage = () => {
@@ -34,6 +35,7 @@ export const MainPage = () => {
         <h1>
           <Link to="/sign-in"> Sign in </Link>
         </h1>
+
       </div>
 j
       <div>
@@ -42,7 +44,9 @@ j
         <p>{userData.image  ? <img src={userData.image } alt="" />  : null}</p>
         <p>{userData.email  ? userData.email : null}</p>
       </div>
-      <div><Link to={`/profile/${userData.username }`}> <h1> Go to user profile</h1> </Link> </div>
+      <div><Link to={`/profile/${userData.username }`}> <h1> Go to user profile</h1> </Link>
+      <Link to="/sign-in"> Sign in </Link>
+       </div>
     </div>
   );
 };
