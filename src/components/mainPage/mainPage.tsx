@@ -15,6 +15,7 @@ export const MainPage = () => {
     username: "",
     image: "",
   });
+
   const randomCharacterState = useAppSelector(stateSelectors.userSliceData);
   console.log({ randomCharacterState });
 

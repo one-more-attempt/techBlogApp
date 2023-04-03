@@ -1,0 +1,16 @@
+@media (max-width: 767px) {
+  .layout {
+    color: red;
+  }
+}
+@media (max-width: 1024px) {
+  .layout {
+    color: green;
+  }
+}
+
+@media (max-width: 320px) {
+  .layout {
+    color: blue;
+  }
+}
