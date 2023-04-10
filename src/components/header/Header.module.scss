@@ -1,0 +1,39 @@
+@import '../../styles//global/layout.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+.logo {
+    // border: red 1px dashed;
+    font-family: 'Sans serif';
+    font-size: 24px;
+    color: $main-green;
+    font-weight: 900;
+
+}
+
+.links {
+    font-family: 'Sans serif';
+    font-size: 16px;
+    font-weight: 500;
+    gap: 20px;
+    color: $header-links;
+    @include flex (center, center);
+
+
+    div {
+        @include flex (center, center);
+        gap: 2px;
+
+        svg {
+            height: 1.2rem;
+            width: 1.2rem
+        }
+    }
+
+}
+
+.headerContainer {
+    margin: 0 auto;
+    @include flex (center, space-between);
+    padding: 10px
+}

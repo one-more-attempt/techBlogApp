@@ -1,0 +1,109 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+.postWrapper {
+    border-top: 1px solid $grey-40;
+    padding: 1.5rem 0;
+
+    .postHeader {
+        @include flex(space-between, center);
+
+        .postInfo {
+            @include flex(center, center);
+            gap: 10px;
+
+            .postAvatar {
+                font-size: inherit;
+
+            }
+
+            .postDetails {
+                @include flex(center, flex-start, column);
+
+                .postDate {
+                    color: $grey-20;
+                }
+
+                .postAuthor {
+                    color: $main-green
+                }
+            }
+
+        }
+
+        .postLikeConter {
+            @include flex(center, center);
+            color: $main-green;
+            border: 1px solid $main-green;
+            border-radius: 10%;
+            padding: 5px;
+            cursor: pointer;
+
+            gap: 5px;
+
+            svg {
+                font-size: 16px;
+            }
+
+
+
+            &:hover {
+                background-color: $main-green;
+                color: $white;
+            }
+
+            &:active {
+                filter: brightness(90%);
+            }
+        }
+    }
+
+    .postBody {
+        margin-top: 16px;
+
+        .postBodyTitle {
+            font-weight: 600;
+            font-size: 30px;
+            line-height: 1.1;
+            color: $title-grey;
+        }
+
+        .postBodyMainText {
+            color: $grey-10;
+            margin-top: 5px;
+            font-size: 1rem;
+            line-height: 1.3rem;
+        }
+    }
+
+    .postFooter {
+        @include flex(center, space-between);
+        
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+  
+        color: $grey-30;
+        margin-top: 15px;
+
+        .readMore {
+            font-family: inherit;
+        }
+
+        .tagsBlock {
+            display: flex;
+            gap: 5px;
+            color: $grey-20;
+
+            .tag {
+                border: 1px solid $grey-40;
+                border-radius: 10rem;
+                padding: 2px 4px 2px 4px;
+            }
+
+        }
+
+
+    }
+}

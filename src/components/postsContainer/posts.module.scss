@@ -1,0 +1,40 @@
+@import '../../styles/colors.scss';
+@import '../../styles/global/layout.scss';
+
+.postsContainer {
+    margin: 0 auto;
+    display: flex;
+    margin-top: 1.5rem;
+
+    .feedTooglePanel {
+        display: flex;
+        color: $title-grey;
+        font-size: 1.1rem;
+        // gap: 10px;
+        color: #aaa;
+
+        div {
+            padding: 1rem;
+            border-bottom: 2px solid $main-green;
+
+        }
+    }
+
+    .posts {
+        flex: 75%;
+        padding: 0 1rem;
+    }
+
+    .tags {
+        flex: 25%;
+        padding: 0 1rem;
+    }
+
+    // .postsContainer:nth-child(1) {
+    //     flex: 75%
+    // }
+
+    // .postsContainer:nth-child(2) {
+    //     flex: 25%
+    // }
+}

@@ -1,0 +1,25 @@
+@import '../../styles/colors.scss';
+@import '../../styles/global/layout.scss';
+@import '../../styles/mixins.scss';
+
+.footerWrapper {
+    margin-top: 10px;
+    @include flex (center, center);
+    padding: 16px 0px;
+    background-color: $grey-50;
+
+    .footerLogo {
+        display: inline-block;
+        color: $main-green;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-right: 10px;
+    }
+
+    .footerText {
+        display: inline-block;
+        color: $grey-30;
+        font-size: .8rem;
+    }
+
+}

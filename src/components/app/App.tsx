@@ -13,17 +13,16 @@ import { NewArticlePage } from "../newArticlePage/newArticlePage";
 import { AccountSettingsPage } from "../profileSettings/profileSettings";
 import { ProtectedRoute } from "../../routes/protectedRoute";
 import { ROUTE_PATH } from "../../routes/routePathes";
-import Test from "./Test.module.css";
+import Main from "./Main.module.scss";
 
 export const App = () => {
   return (
     <Router>
-      <div className={Test.layout}>
+      {/* <div className={Main.layout}> */}
         <Routes>
           <Route path={ROUTE_PATH.MAIN} element={<MainPage />} />
           <Route path={ROUTE_PATH.REGISTRATION} element={<RegisterPage />} />
           <Route path={ROUTE_PATH.SIGN_IN} element={<SignInPage />} />
-
           <Route element={<ProtectedRoute />}>
             <Route
               path={ROUTE_PATH.ACCOUNT_SETTINGS}
@@ -35,7 +34,7 @@ export const App = () => {
             <Route path={ROUTE_PATH.NOT_FOUND} element={<PageNotFound />} />
           </Route>
         </Routes>
-      </div>
+      {/* </div> */}
     </Router>
   );
 };
