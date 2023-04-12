@@ -11,6 +11,7 @@ import { Post } from "../post/post";
 import { PopularTags } from "../popularTags/popularTags";
 import { Footer } from "../footer/Footer";
 import { PostsContainer } from "../postsContainer/postsContainer";
+import { ArticleHeader } from "../articleHeader/ArticleHeader";
 
 export const MainPage = () => {
   // const
@@ -47,11 +48,14 @@ export const MainPage = () => {
     <>
       <Header />
       <IntroPanel />
-      {/* <Post />
+      <ArticleHeader />
+      
+      <div className="content">
+        {/* <Post />
       <PopularTags /> */}
-      <PostsContainer/>
+        <PostsContainer />
+      </div>
       <Footer />
-
 
       {/* <div>
         <h1>

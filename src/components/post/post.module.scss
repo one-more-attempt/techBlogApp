@@ -8,29 +8,6 @@
     .postHeader {
         @include flex(space-between, center);
 
-        .postInfo {
-            @include flex(center, center);
-            gap: 10px;
-
-            .postAvatar {
-                font-size: inherit;
-
-            }
-
-            .postDetails {
-                @include flex(center, flex-start, column);
-
-                .postDate {
-                    color: $grey-20;
-                }
-
-                .postAuthor {
-                    color: $main-green
-                }
-            }
-
-        }
-
         .postLikeConter {
             @include flex(center, center);
             color: $main-green;
@@ -44,8 +21,6 @@
             svg {
                 font-size: 16px;
             }
-
-
 
             &:hover {
                 background-color: $main-green;
@@ -78,12 +53,12 @@
 
     .postFooter {
         @include flex(center, space-between);
-        
+
 
         display: flex;
         align-items: center;
         justify-content: space-between;
-  
+
         color: $grey-30;
         margin-top: 15px;
 

@@ -5,6 +5,7 @@
 .footerWrapper {
     margin-top: 10px;
     @include flex (center, center);
+    flex: 0 0 auto;
     padding: 16px 0px;
     background-color: $grey-50;
 

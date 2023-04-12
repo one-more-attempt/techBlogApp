@@ -12,21 +12,13 @@ import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { PostUserInfo } from "../postInfo/PostUserInfo";
 
 export const Post = () => {
   return (
     <div className={PostStyles.postWrapper}>
       <div className={PostStyles.postHeader}>
-        <div className={PostStyles.postInfo}>
-          <div className={PostStyles.postAvatar}>
-            <Avatar src="/broken-image.jpg" />
-          </div>
-
-          <div className={PostStyles.postDetails}>
-            <div className={PostStyles.postAuthor}>Anah Benešová</div>
-            <div className={PostStyles.postDate}>December 9, 2022</div>
-          </div>
-        </div>
+        <PostUserInfo />
         <div className={PostStyles.postLikeConter}>
           <FavoriteIcon />
           500

@@ -1,0 +1,26 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+
+.postInfo {
+    display: flex;
+    gap: 10px;
+    margin-right: 1.5rem;
+
+    .postAvatar {
+        font-size: inherit;
+
+    }
+
+    .postDetails {
+        @include flex(center, flex-start, column);
+
+        .postDate {
+            color: $grey-20;
+        }
+
+        .postAuthor {
+            color: $main-green
+        }
+    }
+
+}
