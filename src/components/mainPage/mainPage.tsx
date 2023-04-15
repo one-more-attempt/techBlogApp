@@ -12,6 +12,9 @@ import { PopularTags } from "../popularTags/popularTags";
 import { Footer } from "../footer/Footer";
 import { PostsContainer } from "../postsContainer/postsContainer";
 import { ArticleHeader } from "../articleHeader/ArticleHeader";
+import { FollowButton } from "../buttons/followButton/followButton";
+import { LikePostButton } from "../buttons/likePostButton/likePostButton";
+import { AddComment } from "../../components/AddComment/AddComment";
 
 export const MainPage = () => {
   // const
@@ -49,11 +52,12 @@ export const MainPage = () => {
       <Header />
       <IntroPanel />
       <ArticleHeader />
-      
+
       <div className="content">
         {/* <Post />
       <PopularTags /> */}
         <PostsContainer />
+        <AddComment />
       </div>
       <Footer />
 

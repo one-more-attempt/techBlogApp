@@ -13,16 +13,14 @@ import Chip from "@mui/material/Chip";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { PostUserInfo } from "../postInfo/PostUserInfo";
+import { LikeCounterButton } from "../buttons/likeCounterButton/likeCounterButton";
 
 export const Post = () => {
   return (
     <div className={PostStyles.postWrapper}>
       <div className={PostStyles.postHeader}>
-        <PostUserInfo />
-        <div className={PostStyles.postLikeConter}>
-          <FavoriteIcon />
-          500
-        </div>
+        <PostUserInfo darkMode={false} />
+        <LikeCounterButton />
       </div>
       <div className={PostStyles.postBody}>
         <div className={PostStyles.postBodyTitle}>

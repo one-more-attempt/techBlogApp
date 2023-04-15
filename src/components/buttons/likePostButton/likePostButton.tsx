@@ -1,11 +1,25 @@
 import LikeBtn from "./likePost.module.scss";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import classNames from "classnames";
 
-export const LikePostButton = () => {
+type LikePostButtonProps = {
+  darkMode: boolean;
+  active: boolean;
+};
+
+export const LikePostButton = ({ darkMode, active }: LikePostButtonProps) => {
+  const buttonColor = classNames(LikeBtn.likeBtn, {
+    [LikeBtn.darkMode]: darkMode,
+    [LikeBtn.active]: active,
+  });
+
+  const buttonText = active
+    ? `Unfavourite Annah Benesova`
+    : `Favourite Annah Benesova`;
   return (
-    <div className={`${LikeBtn.likeBtn} ${LikeBtn.dark} ${LikeBtn.active}`}>
+    <div className={buttonColor}>
       <FavoriteIcon />
-      Follow Anah Benešová
+      {buttonText}
     </div>
   );
 };

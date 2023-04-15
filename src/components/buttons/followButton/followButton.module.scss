@@ -11,14 +11,47 @@
     font-size: 0.875rem;
     border-radius: 0.2rem;
     gap: 0.25rem;
-    background-color: $white;
     background-color: transparent;
-
     color: $buttonBorderGrey;
     border: 1px solid $buttonBorderGrey;
 
     svg {
         font-size: 1.25rem;
     }
+
+    &:hover {
+        background-color: $buttonBorderGrey;
+        color: $white;
+    }
+    
+    &:active {
+        filter: brightness(90%)
+    }
 }
 
+.active {
+    background-color: $white;
+    color: $title-grey;
+
+    &:hover {
+        background-color: $grey-40;
+        color: $title-grey;
+        border-color: $grey-20;
+    }
+
+    &:active {
+        filter: brightness(90%)
+    }
+}
+
+.darkMode {
+    opacity: 0.8;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:active {
+        filter: brightness(90%)
+    }
+}

@@ -7,43 +7,45 @@
     height: fit-content;
     align-items: center;
     padding: 0.25rem 0.5rem;
+    margin-right: 0.25rem;
     font-size: 0.875rem;
     border-radius: 0.2rem;
     gap: 0.25rem;
+    background-color: transparent;
+    color: $main-green;
+    border: 1px solid $main-green;
 
     svg {
         font-size: 1.25rem;
     }
-    .dark {
-        background-color: transparent;
-        color: $main-green;
-        opacity: 0.8;
-        border: 1px solid $main-green;
-    
-        &:hover {
-            background-color: $main-green;
-            color: $white;
-        }
-    
-        &:active {
-            filter: brightness(90%);
-        }
-    }
-    
-    .active {
-    
+
+    &:hover {
         background-color: $main-green;
         color: $white;
-    
-        &:hover {
-            filter: brightness(90%);
-            // background-color: $main-green;
-            // color: $white;
-        }
-    
-        &:active {
-            filter: brightness(80%);
-        }
     }
 
+    &:active {
+        filter: brightness(90%)
+    }
+}
+
+.active {
+    background-color: $main-green;
+    color: $white;
+
+    &:hover {
+        filter: brightness(90%)
+    }
+
+    &:active {
+        filter: brightness(80%)
+    }
+}
+
+.darkMode {
+    opacity: 0.75;
+
+    &:hover {
+        opacity: 1;
+    }
 }

@@ -1,0 +1,63 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/global/layout.scss';
+@import '../../styles/fonts.scss';
+
+.addCommentWrapper {
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: $title-grey;
+    font-family: Source Sans Pro;
+
+    .content {
+        width: 70%;
+        margin: 0 auto;
+
+
+        fieldset {
+            border: 1px solid $grey-70;
+            border-radius: 0.25rem;
+        }
+
+        .commentInput {
+            display: block;
+            width: 100%;
+            resize: vertical;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            color: $input-placeholder;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        .commentFooter {
+            height: 4rem;
+            border-top: 1px solid $grey-70;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            background-color: $grey-60;
+
+
+            .avatar {
+                color: red;
+                height: 2rem;
+                width: 2rem;
+                // width: min-content;
+            }
+        }
+
+    }
+
+
+}
+
+// padding: 0.75rem 1.25rem;
+// background-color: #f5f5f5;
+
+// font-size: 0.8rem;
+// font-weight: 300;
+// border-top: 1px solid #e5e5e5;

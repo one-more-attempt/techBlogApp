@@ -12,10 +12,11 @@ export const ArticleHeader = () => {
           hard drive!
         </h1>
         <div className={ArtHead.userInfo}>
-          <PostUserInfo />
+          <PostUserInfo darkMode={true} />
 
-          <FollowButton />
-          <LikePostButton />
+          <FollowButton darkMode={true} active={false} />
+          <LikePostButton darkMode={true} active={false} />
+         
         </div>
       </div>
     </div>

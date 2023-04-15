@@ -1,0 +1,24 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/fonts.scss';
+
+.simpleButton {
+    background-color: $main-green;
+    color: $white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-family:  Source Sans Pro;
+    font-weight: 700;
+    border: none;
+    border-radius: 0.2rem;
+    border-color: #5CB85C;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(90%)
+    }
+
+    &:active {
+        filter: brightness(80%)
+    }
+}

@@ -8,19 +8,33 @@
 
     .postAvatar {
         font-size: inherit;
-
     }
 
     .postDetails {
         @include flex(center, flex-start, column);
 
-        .postDate {
-            color: $grey-20;
+        .postAuthorLight {
+            color: $main-green;
+            font-weight: 500;
         }
 
-        .postAuthor {
+        .postDateLight {
+            color: $grey-20;
+            font-size: 0.8rem;
+        }
+
+        .postAuthorLight {
             color: $main-green
         }
+
+        .postAuthorDarkMode {
+            color: $white;
+        }
+
+        .postDateDarkMode {
+            color: $grey-30
+        }
+
     }
 
 }
