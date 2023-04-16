@@ -17,15 +17,19 @@
     gap: 20px;
     color: $header-links;
     @include flex (center, center);
+    cursor: pointer;
 
-
-    div {
+    .link {
         @include flex (center, center);
-        gap: 2px;
+        gap: 0.25rem;
 
         svg {
             height: 1.2rem;
             width: 1.2rem
+        }
+
+        &:hover {
+            color: $header-links-hover;
         }
     }
 

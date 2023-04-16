@@ -11,7 +11,7 @@ import { PageNotFound } from "../pageNotFound/pageNotFound";
 import { MainPage } from "../mainPage/mainPage";
 import { SignInPage } from "../signInPage/signInPage";
 
-export const UserProfile = () => {
+export const UserProfilePage = () => {
   const { userName } = useParams();
   return <div>You logined a{userName}</div>;
 };

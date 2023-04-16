@@ -10,7 +10,6 @@
         display: flex;
         color: $title-grey;
         font-size: 1.1rem;
-        // gap: 10px;
         color: #aaa;
 
         div {
@@ -29,12 +28,4 @@
         flex: 25%;
         padding: 0 1rem;
     }
-
-    // .postsContainer:nth-child(1) {
-    //     flex: 75%
-    // }
-
-    // .postsContainer:nth-child(2) {
-    //     flex: 25%
-    // }
 }
