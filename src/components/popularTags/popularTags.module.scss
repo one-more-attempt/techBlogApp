@@ -11,12 +11,22 @@
         font-size: 0.8rem;
 
         div {
+            cursor: pointer;
             display: inline-block;
             color: $white;
             background-color: $grey-5;
             margin: 0.1rem;
             border-radius: 10rem;
             padding: 0.25rem 0.7rem;
+
+            &:hover {
+                filter: brightness(90%);
+            }
+
+            &:active {
+                filter: brightness(80%);
+            }
+
 
         }
 

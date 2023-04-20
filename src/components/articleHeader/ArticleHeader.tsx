@@ -12,7 +12,7 @@ export const ArticleHeader = () => {
           hard drive!
         </h1>
         <div className={ArtHead.userInfo}>
-          <PostUserInfo darkMode={true} />
+          <PostUserInfo  darkMode={true} author={'123'} createdAt={'123'} />
 
           <FollowButton darkMode={true} active={false} />
           <LikePostButton darkMode={true} active={false} />

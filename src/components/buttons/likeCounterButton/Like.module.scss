@@ -2,9 +2,11 @@
 @import '../../../styles/mixins.scss';
 
 .likeCounter {
+
     @include flex(center, center);
     color: $main-green;
     border: 1px solid $main-green;
+    background-color: transparent;
     border-radius: 10%;
     padding: 5px;
     cursor: pointer;
@@ -23,6 +25,7 @@
         filter: brightness(90%);
     }
 
+    cursor:not-allowed;
 
 }
 

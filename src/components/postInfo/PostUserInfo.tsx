@@ -1,13 +1,19 @@
 import classNames from "classnames";
 import PostInfo from "./postInfo.module.scss";
 import Avatar from "@mui/material/Avatar";
-// let cn = classNames.bind(PostInfo);
+import moment from "moment";
 
-type Props = {
+type PostUserInfoProps = {
   darkMode: boolean;
+  author: string;
+  createdAt: string;
 };
 
-export const PostUserInfo = ({ darkMode }: Props) => {
+export const PostUserInfo = ({
+  darkMode,
+  author,
+  createdAt,
+}: PostUserInfoProps) => {
   const postAuthorColorMode = classNames(PostInfo.postAuthorLight, {
     [PostInfo.postAuthorDarkMode]: darkMode,
   });
@@ -22,8 +28,10 @@ export const PostUserInfo = ({ darkMode }: Props) => {
       </div>
 
       <div className={PostInfo.postDetails}>
-        <div className={postAuthorColorMode}>Anah Benešová</div>
-        <div className={postDateColorMode}>December 9, 2022</div>
+        <div className={postAuthorColorMode}>{author}</div>
+        <div className={postDateColorMode}>
+          {moment(createdAt).format("MMMM D, YYYY")}
+        </div>
       </div>
     </div>
   );

@@ -6,19 +6,7 @@
     display: flex;
     margin-top: 1.5rem;
 
-    .feedTooglePanel {
-        display: flex;
-        color: $title-grey;
-        font-size: 1.1rem;
-        color: #aaa;
-
-        div {
-            padding: 1rem;
-            border-bottom: 2px solid $main-green;
-
-        }
-    }
-
+    // flex: 75% 25%;
     .posts {
         flex: 75%;
         padding: 0 1rem;
@@ -27,5 +15,37 @@
     .tags {
         flex: 25%;
         padding: 0 1rem;
+    }
+
+    .feedTooglePanel {
+        display: flex;
+        color: $title-grey;
+        font-size: 1.1rem;
+        color: #aaa;
+
+        span {
+            font-weight: 900;
+        }
+
+        div {
+            padding: 1rem;
+            cursor: pointer;
+
+            &:hover {
+                color: $feed-hover;
+            }
+        }
+
+        .activeFeed {
+            color: $main-green;
+            border-bottom: 2px solid $main-green;
+
+            &:hover {
+                color: $main-green;
+            }
+        }
+
+
+
     }
 }

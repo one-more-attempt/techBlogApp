@@ -5,13 +5,15 @@
     display: flex;
     gap: 10px;
     margin-right: 1.5rem;
-
+    cursor: pointer;
+    
     .postAvatar {
         font-size: inherit;
     }
 
     .postDetails {
         @include flex(center, flex-start, column);
+     
 
         .postAuthorLight {
             color: $main-green;

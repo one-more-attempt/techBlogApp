@@ -17,6 +17,7 @@
             font-size: 30px;
             line-height: 1.1;
             color: $title-grey;
+            cursor: pointer;
         }
 
         .postBodyMainText {
@@ -28,15 +29,12 @@
     }
 
     .postFooter {
-        @include flex(center, space-between);
-
-
         display: flex;
         align-items: center;
         justify-content: space-between;
-
         color: $grey-30;
         margin-top: 15px;
+        cursor: pointer;
 
         .readMore {
             font-family: inherit;
@@ -46,6 +44,7 @@
             display: flex;
             gap: 5px;
             color: $grey-20;
+            cursor: pointer;
 
             .tag {
                 border: 1px solid $grey-40;

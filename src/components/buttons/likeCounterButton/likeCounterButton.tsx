@@ -1,13 +1,20 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LikeBtn from "./Like.module.scss";
 
-export const LikeCounterButton = () => {
+type LikeCounterButtonProps = {
+  likeCount: number;
+  isLiked: boolean;
+};
+export const LikeCounterButton = ({
+  likeCount,
+  isLiked,
+}: LikeCounterButtonProps) => {
   return (
     <>
-      <div className={LikeBtn.likeCounter}>
+      <button disabled className={LikeBtn.likeCounter}>
         <FavoriteIcon />
-        500
-      </div>
+        {likeCount}
+      </button>
     </>
   );
 };
