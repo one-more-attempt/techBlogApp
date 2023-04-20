@@ -57,6 +57,7 @@ export const PostsContainer = () => {
             className={checkActive(Feed.GlobalFeed)}
             onClick={() => {
               setActive(Feed.GlobalFeed);
+              refetch();
             }}
           >
             Global Feed
