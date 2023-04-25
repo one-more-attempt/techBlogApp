@@ -4,16 +4,17 @@ import classNames from "classnames";
 
 type FollowButtonProps = {
   darkMode: boolean;
-  active: boolean;
+  isFollow: boolean;
+  author: string;
 };
-export const FollowButton = ({ darkMode, active }: FollowButtonProps) => {
+export const FollowButton = ({ darkMode, isFollow, author }: FollowButtonProps) => {
   const buttonColor = classNames(Follow.followBtn, {
-    [Follow.active]: active,
+    [Follow.active]: isFollow,
     [Follow.darkMode]: darkMode,
   });
-  const buttonText = active
-    ? `Unfollow Annah Benesova`
-    : `Follow Annah Benesova`;
+  const buttonText = isFollow
+    ? `Unfollow ${author}`
+    : `Follow ${author}`;
 
   return (
     <div className={buttonColor}>

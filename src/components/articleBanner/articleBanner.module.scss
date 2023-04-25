@@ -2,7 +2,7 @@
 @import '../../styles/global/layout.scss';
 @import '../../styles/mixins.scss';
 
-.articleHeaderWrapper {
+.articleBannerWrapper {
     background-color: $header-grey;
 
     padding: 2rem 0 2rem 0;
@@ -17,13 +17,13 @@
             text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        .userInfo {
-            margin-top: 2rem;
-            display: flex;
-            align-items: center;
+        // .userInfo {
+        //     margin-top: 2rem;
+        //     display: flex;
+        //     align-items: center;
             
 
-        }
+        // }
     }
 
 

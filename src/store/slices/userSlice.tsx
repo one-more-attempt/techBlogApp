@@ -8,22 +8,26 @@ export enum Feed {
 
 export type UserStateType = {
   userName: string;
+  email: string;
   isLogined: boolean;
   bio: string;
   imageURL: string;
   feed: Feed;
   selectedTagName: string;
   initialLoading: boolean;
+  showIsNotLoginedError: boolean;
 };
 
 const INITIAL_STATE: UserStateType = {
   isLogined: false,
   userName: "",
+  email: "",
   bio: "",
   imageURL: "",
   feed: Feed.GlobalFeed,
   initialLoading: false,
   selectedTagName: "",
+  showIsNotLoginedError: false,
 };
 
 export const userSlice = createSlice({
@@ -32,12 +36,18 @@ export const userSlice = createSlice({
   reducers: {
     setIsLogined(
       state,
-      action: PayloadAction<{ name: string; bio: string; imageURL: string }>
+      action: PayloadAction<{
+        name: string;
+        bio: string;
+        imageURL: string;
+        email: string;
+      }>
     ) {
       state.isLogined = true;
       state.userName = action.payload.name;
       state.bio = action.payload.bio;
       state.imageURL = action.payload.imageURL;
+      state.email = action.payload.email;
     },
 
     setIsNotLogined(state) {
@@ -54,6 +64,9 @@ export const userSlice = createSlice({
     setActiveFeedTag(state, action: PayloadAction<string>) {
       state.feed = Feed.Tag;
       state.selectedTagName = action.payload;
+    },
+    setShowIsNotLoginedError(state, action: PayloadAction<boolean>) {
+      state.showIsNotLoginedError = action.payload;
     },
   },
 });

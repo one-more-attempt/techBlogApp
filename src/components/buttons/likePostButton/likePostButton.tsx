@@ -4,18 +4,19 @@ import classNames from "classnames";
 
 type LikePostButtonProps = {
   darkMode: boolean;
-  active: boolean;
+  isLiked: boolean;
+  likesCount: number;
 };
 
-export const LikePostButton = ({ darkMode, active }: LikePostButtonProps) => {
+export const LikePostButton = ({ darkMode, isLiked,  likesCount}: LikePostButtonProps) => {
   const buttonColor = classNames(LikeBtn.likeBtn, {
     [LikeBtn.darkMode]: darkMode,
-    [LikeBtn.active]: active,
+    [LikeBtn.active]: isLiked,
   });
 
-  const buttonText = active
-    ? `Unfavourite Annah Benesova`
-    : `Favourite Annah Benesova`;
+  const buttonText = isLiked
+    ? `Unfavorite Article (${likesCount})`
+    : `Favorite Article`;
   return (
     <div className={buttonColor}>
       <FavoriteIcon />

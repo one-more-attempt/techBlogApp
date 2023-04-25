@@ -6,14 +6,18 @@
     gap: 10px;
     margin-right: 1.5rem;
     cursor: pointer;
-    
+
     .postAvatar {
-        font-size: inherit;
+        border-radius: 50%;
+        overflow: hidden;
+        width: 2rem;
+        height: 2rem;
     }
+
 
     .postDetails {
         @include flex(center, flex-start, column);
-     
+
 
         .postAuthorLight {
             color: $main-green;

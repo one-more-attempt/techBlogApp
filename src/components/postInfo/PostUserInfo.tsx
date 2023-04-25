@@ -7,12 +7,14 @@ type PostUserInfoProps = {
   darkMode: boolean;
   author: string;
   createdAt: string;
+  imgURL: string;
 };
 
 export const PostUserInfo = ({
   darkMode,
   author,
   createdAt,
+  imgURL,
 }: PostUserInfoProps) => {
   const postAuthorColorMode = classNames(PostInfo.postAuthorLight, {
     [PostInfo.postAuthorDarkMode]: darkMode,
@@ -24,7 +26,7 @@ export const PostUserInfo = ({
   return (
     <div className={PostInfo.postInfo}>
       <div className={PostInfo.postAvatar}>
-        <Avatar src="/broken-image.jpg" />
+        <img src={imgURL} alt="" />
       </div>
 
       <div className={PostInfo.postDetails}>

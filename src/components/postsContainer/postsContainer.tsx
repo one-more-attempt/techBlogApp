@@ -8,17 +8,21 @@ import { useState } from "react";
 import classNames from "classnames";
 import { Feed, userSlice } from "../../store/slices/userSlice";
 import { blogAPI } from "../../services/blogService";
+import { ErrorNotification } from "../errorNotification/errorNotification";
 
 export const PostsContainer = () => {
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const dispatch = useAppDispatch();
-  const selectedTag = userDataState.selectedTagName;
+  // const [isNotLoginedError, setisNotLoginedError] = useState(false);
+  const { selectedTagName, feed, isLogined, showIsNotLoginedError } =
+    userDataState;
 
   const {
     data: globalFeed,
     error,
     isLoading,
     isSuccess,
+    isError,
     refetch,
   } = blogAPI.useGetGlobalPostsQuery("");
 
@@ -26,19 +30,11 @@ export const PostsContainer = () => {
     data: feedByTag,
     error: errorByTag,
     isLoading: isLoadingByTag,
-  } = blogAPI.useGetGlobalFeedByTagQuery(selectedTag);
-  // console.log(feedByTag);
-
-  const checkActive = (feed: Feed) => {
-    if (userDataState.feed === feed) return Posts.activeFeed;
-  };
-  const setActive = (feed: Feed) => {
-    dispatch(userSlice.actions.setActiveFeed(feed));
-  };
-  const activeFeed = userDataState.feed;
+  } = blogAPI.useGetGlobalFeedByTagQuery(selectedTagName);
+  console.log(globalFeed);
 
   let setActiveToRender;
-  switch (activeFeed) {
+  switch (feed) {
     case `${Feed.GlobalFeed}`:
       setActiveToRender = globalFeed;
       break;
@@ -48,6 +44,13 @@ export const PostsContainer = () => {
     default:
       setActiveToRender = globalFeed;
   }
+
+  const checkActive = (feed: Feed) => {
+    if (userDataState.feed === feed) return Posts.activeFeed;
+  };
+  const setActive = (feed: Feed) => {
+    dispatch(userSlice.actions.setActiveFeed(feed));
+  };
 
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
@@ -65,22 +68,27 @@ export const PostsContainer = () => {
           <div
             className={checkActive(Feed.MyFeed)}
             onClick={() => {
-              setActive(Feed.MyFeed);
-              refetch();
+              if (isLogined) {
+                setActive(Feed.MyFeed);
+                refetch();
+              } else {
+                // showIsNotLoginedErrorAndHideAfter5sec();
+              }
             }}
           >
             My Feed
           </div>
 
-          {userDataState.feed === Feed.Tag ? (
+          {feed === Feed.Tag ? (
             <div className={checkActive(Feed.Tag)}>
               <span># </span>
-              {userDataState.selectedTagName}
+              {selectedTagName}
             </div>
           ) : null}
         </div>
 
-        {/* {isLoading && "loading"} */}
+        {isLoading && "loading..."}
+        {isError && "SomeError"}
 
         {setActiveToRender &&
           setActiveToRender.articles.map((item: any, index: number) => (
@@ -92,10 +100,13 @@ export const PostsContainer = () => {
               isLiked={item.favorite}
               likeCount={item.favoritesCount}
               createdAt={item.createdAt}
-              tagList={item.tagList}
+              tagsList={item.tagList}
+              slug={item.slug}
+              imgURL={item.author.image}
             />
           ))}
       </div>
+
       <div className={Posts.tags}>
         <PopularTags />
       </div>

@@ -1,0 +1,14 @@
+@import '../../styles/colors.scss';
+
+.tagsBlock {
+    display: flex;
+    gap: 5px;
+    color: $grey-20;
+    cursor: pointer;
+
+    .tag {
+        border: 1px solid $grey-40;
+        border-radius: 10rem;
+        padding: 2px 4px 2px 4px;
+    }
+}

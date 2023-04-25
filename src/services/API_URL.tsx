@@ -1,10 +1,12 @@
 export const API_URL = {
   BASE_URL: `https://conduit.productionready.io/api`,
-  USER_INFO: `/api/user`,
+  LOGIN: `/users/login`,
+  USER_INFO: `/user`,
   POPULAR_TAGS: "/tags",
   GLOBAL_POSTS: "/articles?limit=10&offset=0",
   GLOBAL_WITH_TAG: (tagName: string) =>
     `/articles?tag=${tagName}&limit=10&offset=0`,
-  LOGIN: `https://conduit.productionready.io/api/users/login`,
+  POST_BY_SLUG: (slug: string) => `/articles/${slug}`,
+  POST_COMMENTS_BY_SLUG: (slug: string) => `/articles/${slug}/comments`,
+
 };
-// https://conduit.productionready.io/api/articles?tag=butt&limit=10&offset=0

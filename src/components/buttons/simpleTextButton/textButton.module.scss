@@ -2,17 +2,20 @@
 @import '../../../styles/fonts.scss';
 
 .simpleButton {
+    display: block;
     background-color: $main-green;
     color: $white;
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
-    font-family:  Source Sans Pro;
+    font-family: Source Sans Pro;
     font-weight: 700;
     border: none;
     border-radius: 0.2rem;
     border-color: #5CB85C;
     font-weight: 700;
     cursor: pointer;
+
+
 
     &:hover {
         filter: brightness(90%)
@@ -22,3 +25,16 @@
         filter: brightness(80%)
     }
 }
+
+.disabled {
+    opacity: 0.5;
+
+    &:hover {
+        filter: none
+    }
+
+    &:active {
+        filter: none
+    }
+}
+

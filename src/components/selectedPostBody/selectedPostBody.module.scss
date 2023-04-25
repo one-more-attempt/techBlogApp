@@ -1,0 +1,19 @@
+@import '../../styles/global/layout.scss';
+@import '../../styles/colors.scss';
+
+.postBodyWrapper {
+    margin: 0 auto;
+    border-bottom: 1px solid $grey-40;
+    padding: 2rem 0;
+
+    .mainText {
+        font-size: 1.2rem;
+        line-height: 1.8rem;
+        margin-bottom: 2rem;
+        color: $title-grey;
+        font-family: Source Sans Pro;
+    }
+
+    .tags {}
+
+}

@@ -1,8 +1,15 @@
+$white: #ffffff;
+$black: #000000;
+
 $main-green: #5cb85c;
+$title-grey: #373a3c;
 
 $header-grey: #333333;
-$title-grey: #373a3c;
-$input-placeholder: #55595c;
+$header-links: rgba(0, 0, 0, .3);
+$header-links-hover: rgba(0, 0, 0, .6);
+$header-links-active: rgba(0, 0, 0, .8);
+
+
 $grey-5: #818A91;
 $grey-10: #999999;
 $grey-20: #aaaaaa;
@@ -11,15 +18,10 @@ $grey-40: #dddddd;
 $grey-50: #f3f3f3;
 $grey-60: #f5f5f5;
 $grey-70: #e5e5e5;
-
-$white: #ffffff;
-$black: #000000;
 $grey-tag: #818A91;
 
+$input-text: #55595c;
+$input-border-focus: #66afe9;
 
 $buttonBorderGrey: #cccccc;
-
-$header-links: rgba(0, 0, 0, .3);
-$header-links-hover: rgba(0, 0, 0, .6);
-$header-links-active: rgba(0, 0, 0, .8);
 $feed-hover: #555555;

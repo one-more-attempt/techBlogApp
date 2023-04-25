@@ -14,103 +14,31 @@ import { blogAPI } from "../../services/blogService";
 import { ReactComponent as SpinnerImg } from "../../img/spinner.svg";
 
 export const MainPage = () => {
-  const userDataState = useAppSelector(stateSelectors.userSliceData);
-  const dispatch = useAppDispatch();
+  const token = localStorage.getItem("userToken");
+  console.log(token);
 
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const { isLogined } = userDataState;
+  const dispatch = useAppDispatch();
+  const { data, error, isLoading } = blogAPI.useGetUserInfoByTokenQuery(token);
+
+  // const [getUserInfo, { error, isError, isLoading, data }] =
+  //   blogAPI.useGetUserInfoByTokenQuery();
+  // const;
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
   return (
     <>
       <Header />
-      {/* <Spinner /> */}
-      {/* <IntroPanel /> */}
-      {/* {introPanel} */}
-      {/* <ArticleHeader /> */}
+      {!isLogined && <IntroPanel />}
       <div className="content">
         <PostsContainer />
-        {/* <AddComment /> */}
       </div>
       <Footer />
     </>
   );
 };
-
-// useEffect(() => {
-//   let token = localStorage.getItem(`userToken`);
-//   //если есть токен, берем данные по юзеру с сервера
-//   if (token) {
-//     dispatch(userSlice.actions.setInitialLoading(true));
-//     axios
-//       .get(API_URL.GET_USER_INFO, {
-//         headers: {
-//           authorization: "Token " + token,
-//         },
-//       })
-//       .then((resp) => {
-//         console.log(resp.data.user);
-//         const userData = {
-//           name: resp.data.user.username,
-//           bio: resp.data.user.bio,
-//           imageURL: resp.data.user.image,
-//         };
-//         dispatch(userSlice.actions.setIsLogined(userData));
-//         dispatch(userSlice.actions.setInitialLoading(false));
-//       });
-//   } else {
-//     dispatch(userSlice.actions.setIsNotLogined());
-//   }
-// }, []);
-
-// const introPanel =
-//   userDataState.initialLoading ? null : !userDataState.isLogined ? (
-//     <IntroPanel />
-//   ) : null;
-
-// const
-// const [userData, setUserData] = useState({
-//   email: "",
-//   bio: "",
-//   token: "",
-//   username: "",
-//   image: "",
-// });
-
-// useEffect(() => {
-//   let token = localStorage.getItem(`userToken`);
-//   if (token) {
-//     axios
-//       .get(API_URL.GET_USER_INFO, {
-//         headers: {
-//           authorization: "Token " + token,
-//         },
-//       })
-//       .then((resp) => {
-//         console.log(resp.data.user);
-//         setUserData(resp.data.user);
-//       });
-//   }
-// }, []);
-
-{
-  /* <div>
-        <h1>
-          <Link to="/registration">Go to registration </Link>
-        </h1>
-        <h1>
-          <Link to="/sign-in"> Sign in </Link>
-        </h1>
-      </div>
-
-      <div>
-        user:
-        <p>{userData.image ? <img src={userData.image} alt="" /> : null}</p>
-        <p>{userData.username ? userData.username : null}</p>
-        <p>{userData.email ? userData.email : null}</p>
-      </div>
-      <div>
-        <Link to={`/profile/${userData.username}`}>
-          {" "}
-          <h1> Go to user profile</h1>{" "}
-        </Link>
-
-        <Link to="/sign-in"> Sign in </Link>
-      </div> */
-}

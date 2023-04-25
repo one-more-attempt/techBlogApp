@@ -1,0 +1,16 @@
+@import '../../styles/colors.scss';
+
+
+.errorNotificationWrapper {
+    margin-top: 1rem;
+    padding: 0.2rem 1rem;
+
+    color: $white;
+    background-color: rgba(255,42,81,.25);
+    // rgba(255,42,81,.1);
+    border-radius: 0.25rem;
+
+    span {
+        // font-weight: 700;
+    }
+}
