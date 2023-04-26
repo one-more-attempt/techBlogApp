@@ -25,6 +25,7 @@ export const SelectedPostPage = () => {
               favorited={data.article.favorited}
               following={data.article.author.following}
               likesCount={data.article.favoritesCount}
+              imgURL= {data.article.author.image}
             />
             <SelectedPostBody
               text={data.article.body}
@@ -37,6 +38,8 @@ export const SelectedPostPage = () => {
               following={data.article.author.following}
               likesCount={data.article.favoritesCount}
               slug={data.article.slug}
+              imgURL= {data.article.author.image}
+
             />
           </>
         )}

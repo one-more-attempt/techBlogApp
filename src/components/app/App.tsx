@@ -21,44 +21,21 @@ import { useEffect } from "react";
 import { userSlice } from "../../store/slices/userSlice";
 import axios from "axios";
 import { API_URL } from "../../services/API_URL";
+import { AuthorPage } from "../../pages/authorPage/authorPage";
 
 export const App = () => {
-  
-  // useEffect(() => {
-  //   let token = localStorage.getItem(`userToken`);
-  //   //если есть токен, берем данные по юзеру с сервера
-  //   if (token) {
-  //     dispatch(userSlice.actions.setInitialLoading(true));
-  //     axios
-  //       .get(API_URL.GET_USER_INFO, {
-  //         headers: {
-  //           authorization: "Token " + token,
-  //         },
-  //       })
-  //       .then((resp) => {
-  //         console.log(resp.data.user);
-  //         const userData = {
-  //           name: resp.data.user.username,
-  //           bio: resp.data.user.bio,
-  //           imageURL: resp.data.user.image,
-  //         };
-  //         dispatch(userSlice.actions.setIsLogined(userData));
-  //         dispatch(userSlice.actions.setInitialLoading(false));
-  //       });
-  //   } else {
-  //     dispatch(userSlice.actions.setIsNotLogined());
-  //   }
-  // }, []);
   return (
     <Router>
       <Routes>
         <Route path={ROUTE_PATH.MAIN} element={<MainPage />} />
         <Route path={ROUTE_PATH.REGISTRATION} element={<RegisterPage />} />
         <Route path={ROUTE_PATH.SIGN_IN} element={<SignInPage />} />
-        <Route path={"/post"}>
+        <Route path={ROUTE_PATH.POST}>
           <Route path={":slug"} element={<SelectedPostPage />} />
         </Route>
-
+        <Route path={ROUTE_PATH.PROFILE}>
+          <Route path={":username"} element={<AuthorPage />} />
+        </Route>
         <Route element={<ProtectedRoute />}>
           <Route
             path={ROUTE_PATH.ACCOUNT_SETTINGS}
@@ -73,9 +50,3 @@ export const App = () => {
     </Router>
   );
 };
-function dispatch(arg0: {
-  payload: boolean;
-  type: "userSlice/setInitialLoading";
-}) {
-  throw new Error("Function not implemented.");
-}

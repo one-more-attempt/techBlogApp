@@ -15,7 +15,6 @@ export type UserStateType = {
   feed: Feed;
   selectedTagName: string;
   initialLoading: boolean;
-  showIsNotLoginedError: boolean;
 };
 
 const INITIAL_STATE: UserStateType = {
@@ -27,7 +26,6 @@ const INITIAL_STATE: UserStateType = {
   feed: Feed.GlobalFeed,
   initialLoading: false,
   selectedTagName: "",
-  showIsNotLoginedError: false,
 };
 
 export const userSlice = createSlice({
@@ -49,25 +47,33 @@ export const userSlice = createSlice({
       state.imageURL = action.payload.imageURL;
       state.email = action.payload.email;
     },
-
-    setIsNotLogined(state) {
+    setInitial(state) {
       state.isLogined = false;
-    },
-
-    setInitialLoading(state, action: PayloadAction<boolean>) {
-      state.initialLoading = action.payload;
+      state.userName = "";
+      state.email = "";
+      state.bio = "";
+      state.imageURL = "";
+      state.feed = Feed.GlobalFeed;
+      state.initialLoading = false;
+      state.selectedTagName = "";
     },
 
     setActiveFeed(state, action: PayloadAction<Feed>) {
       state.feed = action.payload;
     },
+
     setActiveFeedTag(state, action: PayloadAction<string>) {
       state.feed = Feed.Tag;
       state.selectedTagName = action.payload;
     },
-    setShowIsNotLoginedError(state, action: PayloadAction<boolean>) {
-      state.showIsNotLoginedError = action.payload;
-    },
+
+    // setInitialLoading(state, action: PayloadAction<boolean>) {
+    //   state.initialLoading = action.payload;
+    // },
+
+    // setShowIsNotLoginedError(state, action: PayloadAction<boolean>) {
+    //   state.showIsNotLoginedError = action.payload;
+    // },
   },
 });
 

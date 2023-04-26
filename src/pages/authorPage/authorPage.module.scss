@@ -1,0 +1,36 @@
+@import '../../styles/colors.scss';
+@import '../../styles/global/layout.scss';
+
+.feedTooglePanel {
+    display: flex;
+    color: $title-grey;
+    font-size: 1.1rem;
+    color: #aaa;
+    border-bottom: 1px solid $grey-40;
+
+    span {
+        font-weight: 900;
+    }
+
+    div {
+        padding: 1rem;
+        cursor: pointer;
+
+        &:hover {
+            color: $feed-hover;
+        }
+    }
+
+    .activeFeed {
+        color: $main-green;
+        border-bottom: 2px solid $main-green;
+
+        &:hover {
+            color: $main-green;
+        }
+    }
+}
+
+.contentWrapper {
+    padding: 0 5rem
+}

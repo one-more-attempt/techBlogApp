@@ -2,6 +2,8 @@ import classNames from "classnames";
 import PostInfo from "./postInfo.module.scss";
 import Avatar from "@mui/material/Avatar";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import { ROUTE_PATH } from "../../routes/routePathes";
 
 type PostUserInfoProps = {
   darkMode: boolean;
@@ -30,7 +32,10 @@ export const PostUserInfo = ({
       </div>
 
       <div className={PostInfo.postDetails}>
-        <div className={postAuthorColorMode}>{author}</div>
+        <div className={postAuthorColorMode}>
+          <Link to={ROUTE_PATH.PROFILE_DYNAMIC(author)}>{author}</Link>
+          
+        </div>
         <div className={postDateColorMode}>
           {moment(createdAt).format("MMMM D, YYYY")}
         </div>

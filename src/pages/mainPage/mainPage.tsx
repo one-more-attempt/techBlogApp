@@ -12,29 +12,41 @@ import { PostsContainer } from "../../components/postsContainer/postsContainer";
 import { userSlice } from "../../store/slices/userSlice";
 import { blogAPI } from "../../services/blogService";
 import { ReactComponent as SpinnerImg } from "../../img/spinner.svg";
+import { Email } from "@mui/icons-material";
 
 export const MainPage = () => {
   const token = localStorage.getItem("userToken");
-  console.log(token);
-
-  const userDataState = useAppSelector(stateSelectors.userSliceData);
-  const { isLogined } = userDataState;
   const dispatch = useAppDispatch();
-  const { data, error, isLoading } = blogAPI.useGetUserInfoByTokenQuery(token);
 
-  // const [getUserInfo, { error, isError, isLoading, data }] =
-  //   blogAPI.useGetUserInfoByTokenQuery();
-  // const;
+  // const trigger, data] = blogAPI.useGetUserInfoByTokenQuery(token);
+
+  const [trigger, { data, isLoading, error }] =
+    blogAPI.useLazyGetUserInfoByTokenQuery();
+
   useEffect(() => {
-    const token = localStorage.getItem("userToken");
+    if (token) {
+      trigger(token, true);
+    }
+  });
+
+  useEffect(() => {
     if (data) {
+      const { email, username, bio, image } = data.user;
+      const userDataFromServer = {
+        name: username,
+        bio: bio,
+        email: email,
+        imageURL: image,
+      };
+      dispatch(userSlice.actions.setIsLogined(userDataFromServer));
       console.log(data);
     }
-  }, [data]);
+  });
+
   return (
     <>
       <Header />
-      {!isLogined && <IntroPanel />}
+      {!token && <IntroPanel />}
       <div className="content">
         <PostsContainer />
       </div>

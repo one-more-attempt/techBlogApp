@@ -12,7 +12,7 @@ export const PopularTags = () => {
   };
   const { data, error, isLoading, isSuccess } =
     blogAPI.useGetPopularTagsQuery("");
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className={PopTags.tagsWrapper}>

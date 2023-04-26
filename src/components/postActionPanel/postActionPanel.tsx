@@ -10,13 +10,15 @@ type PostActionPanelProps = {
   isLiked: boolean;
   isFollowing: boolean;
   likesCount: number;
+  imgURL: string;
 };
 export const PostActionPanel = ({
   author,
   isLiked,
   isFollowing,
   likesCount,
-  darkMode
+  darkMode,
+  imgURL,
 }: PostActionPanelProps) => (
   <>
     <div className={PostActPanel.actionPanelWrapper}>
@@ -24,10 +26,18 @@ export const PostActionPanel = ({
         darkMode={darkMode}
         author={author}
         createdAt={"2022-12-09T13:46:24.264Z"}
-        imgURL = {''}
+        imgURL={imgURL}
       />
-      <FollowButton darkMode={darkMode} isFollow={isFollowing} author={author} />
-      <LikePostButton darkMode={darkMode} isLiked={isLiked} likesCount={likesCount} />
+      <FollowButton
+        darkMode={darkMode}
+        isFollow={isFollowing}
+        author={author}
+      />
+      <LikePostButton
+        darkMode={darkMode}
+        isLiked={isLiked}
+        likesCount={likesCount}
+      />
     </div>
   </>
 );

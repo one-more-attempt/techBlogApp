@@ -13,9 +13,7 @@ import { ErrorNotification } from "../errorNotification/errorNotification";
 export const PostsContainer = () => {
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const dispatch = useAppDispatch();
-  // const [isNotLoginedError, setisNotLoginedError] = useState(false);
-  const { selectedTagName, feed, isLogined, showIsNotLoginedError } =
-    userDataState;
+   const { selectedTagName, feed, isLogined } = userDataState;
 
   const {
     data: globalFeed,
@@ -31,7 +29,7 @@ export const PostsContainer = () => {
     error: errorByTag,
     isLoading: isLoadingByTag,
   } = blogAPI.useGetGlobalFeedByTagQuery(selectedTagName);
-  console.log(globalFeed);
+  // console.log(globalFeed);
 
   let setActiveToRender;
   switch (feed) {
@@ -60,7 +58,7 @@ export const PostsContainer = () => {
             className={checkActive(Feed.GlobalFeed)}
             onClick={() => {
               setActive(Feed.GlobalFeed);
-              refetch();
+              // refetch();
             }}
           >
             Global Feed
@@ -70,17 +68,21 @@ export const PostsContainer = () => {
             onClick={() => {
               if (isLogined) {
                 setActive(Feed.MyFeed);
-                refetch();
-              } else {
-                // showIsNotLoginedErrorAndHideAfter5sec();
+                // refetch();
               }
             }}
           >
             My Feed
           </div>
 
-          {feed === Feed.Tag ? (
-            <div className={checkActive(Feed.Tag)}>
+          {selectedTagName ? (
+            <div
+              className={checkActive(Feed.Tag)}
+              onClick={() => {
+                setActive(Feed.Tag);
+                // refetch()
+              }}
+            >
               <span># </span>
               {selectedTagName}
             </div>

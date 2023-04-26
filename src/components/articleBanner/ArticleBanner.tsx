@@ -11,6 +11,7 @@ type ArticleBannerProps = {
   favorited: boolean;
   following: boolean;
   likesCount: number;
+  imgURL: string;
 };
 
 export const ArticleBanner = ({
@@ -19,7 +20,8 @@ export const ArticleBanner = ({
   date,
   favorited,
   following,
-  likesCount
+  likesCount,
+  imgURL
 }: ArticleBannerProps) => {
   return (
     <div className={`${ArtBanner.articleBannerWrapper}`}>
@@ -33,6 +35,7 @@ export const ArticleBanner = ({
           isFollowing={following}
           darkMode={true}
           likesCount= {likesCount}
+          imgURL = {imgURL}
           
         />
       </div>

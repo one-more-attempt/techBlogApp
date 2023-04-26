@@ -13,6 +13,7 @@ type CommentsBlockProps = {
   following: boolean;
   likesCount: number;
   slug: string;
+  imgURL: string;
 };
 export const CommentsBlock = ({
   author,
@@ -21,6 +22,7 @@ export const CommentsBlock = ({
   following,
   likesCount,
   slug,
+  imgURL
 }: CommentsBlockProps) => {
   const { data, error, isLoading } = blogAPI.useGetPostCommentsQuery(slug);
   console.log(data);
@@ -36,6 +38,7 @@ export const CommentsBlock = ({
         isLiked={favorited}
         isFollowing={following}
         likesCount={likesCount}
+        imgURL = {imgURL}
       />
       <AddComment />
       {data &&

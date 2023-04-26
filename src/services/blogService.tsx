@@ -6,12 +6,34 @@ export const blogAPI = createApi({
   reducerPath: "blogAPI",
   baseQuery: fetchBaseQuery({ baseUrl: `${API_URL.BASE_URL}` }),
   endpoints: (build) => ({
+    
+    login: build.mutation<loginResponse, loginObject>({
+      query: (loginObj) => ({
+        url: `${API_URL.LOGIN}`,
+        method: "POST",
+        body: loginObj,
+      }),
+    }),
+
+    getUserInfoByToken: build.query<loginResponse, string>({
+      query: (token) => ({
+        url: `${API_URL.USER_INFO}`,
+        headers: { authorization: `Token ${token}` },
+      }),
+    }),
+
     getGlobalPosts: build.query({
       query: () => ({
         url: `${API_URL.GLOBAL_POSTS}`,
       }),
     }),
 
+    getAuthorPosts: build.query({
+      query: (author:string) => ({
+        url: `${API_URL.AUTHOR_POSTS(author)}`,
+      }),
+    }),
+    
     getPopularTags: build.query({
       query: () => ({
         url: `${API_URL.POPULAR_TAGS}`,
@@ -35,26 +57,6 @@ export const blogAPI = createApi({
         url: `${API_URL.POST_COMMENTS_BY_SLUG(slug)}`,
       }),
     }),
-
-    login: build.mutation<any, loginObject>({
-      query: (loginObj) => ({
-        url: `${API_URL.LOGIN}`,
-        method: "POST",
-        body: loginObj,
-      }),
-    }),
-
-    getUserInfoByToken: build.query<loginResponse, any>({
-      query: (token) => ({
-        url: `${API_URL.USER_INFO}`,
-        headers: { authorization: `Token ${token}` },
-      }),
-    }),
   }),
 });
-// getUserInfoByToken:
-// get(API_URL.GET_USER_INFO, {
-//         headers: {
-//           authorization: "Token " + token,
-//         },
-// transformResponse: (response: any) => response.data,
+
