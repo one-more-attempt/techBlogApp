@@ -1,2 +1,4 @@
-export const getTokenFromLS = () => localStorage.getItem("userToken");
-export const removeTokenFromLS = () => localStorage.removeItem("userToken");
+export const localStorageService = {
+    getToken: () => localStorage.getItem("userToken"),
+    removetoken : () => localStorage.removeItem("userToken")
+}

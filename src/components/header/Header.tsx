@@ -6,7 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { stateSelectors } from "../../store";
 import { Link, useNavigate } from "react-router-dom";
-import { getTokenFromLS, removeTokenFromLS } from "../../services/LSService";
+import { localStorageService } from "../../services/LSService";
 import { ROUTE_PATH } from "../../routes/routePathes";
 import { userSlice } from "../../store/slices/userSlice";
 
@@ -16,10 +16,9 @@ export const Header = () => {
   const navigate = useNavigate();
   let links: JSX.Element;
   const goToLogout = () => {
-    removeTokenFromLS();
+    localStorageService.removetoken();
     dispatch(userSlice.actions.setInitial());
-  
-    
+
     navigate(ROUTE_PATH.MAIN);
   };
 
@@ -66,7 +65,6 @@ export const Header = () => {
       </>
     );
   }
-  console.log(userDataState);
   return (
     <>
       <div

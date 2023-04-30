@@ -34,7 +34,7 @@ export const App = () => {
           <Route path={":slug"} element={<SelectedPostPage />} />
         </Route>
         <Route path={ROUTE_PATH.PROFILE}>
-          <Route path={":username"} element={<AuthorPage />} />
+          <Route path={":author"} element={<AuthorPage />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route

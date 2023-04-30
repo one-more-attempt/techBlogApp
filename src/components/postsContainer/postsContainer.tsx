@@ -4,37 +4,61 @@ import { Post } from "../post/post";
 import { PopularTags } from "../popularTags/popularTags";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { stateSelectors } from "../../store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 import { Feed, userSlice } from "../../store/slices/userSlice";
-import { blogAPI } from "../../services/blogService";
+import { blogAPI } from "../../api/blogAPI";
 import { ErrorNotification } from "../errorNotification/errorNotification";
+import { localStorageService } from "../../services/LSService";
+import { ReactComponent as Spinner } from "../../img/spinner.svg";
 
 export const PostsContainer = () => {
+  const token = localStorageService.getToken();
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const dispatch = useAppDispatch();
-   const { selectedTagName, feed, isLogined } = userDataState;
+  const { selectedTagName, feed, isLogined } = userDataState;
 
   const {
     data: globalFeed,
-    error,
-    isLoading,
-    isSuccess,
-    isError,
-    refetch,
-  } = blogAPI.useGetGlobalPostsQuery("");
+    isLoading: isLoadingGlobalFeed,
+    isFetching: isFetchingGlobalFeed,
+    isError: isErrorGlobalFeed,
+  } = blogAPI.useGetGlobalPostsQuery(token ? token : "");
 
+  const [
+    myFeedTrigger,
+    {
+      data: myFeed,
+      isLoading: isLoadingMyFeed,
+      isFetching: isFetchingMyFeed,
+      isError: isErrorMyFeed,
+    },
+  ] = blogAPI.useLazyGetMyFeedQuery();
+
+  useEffect(() => {
+    if (token) {
+      myFeedTrigger(token);
+    }
+  });
   const {
     data: feedByTag,
-    error: errorByTag,
-    isLoading: isLoadingByTag,
-  } = blogAPI.useGetGlobalFeedByTagQuery(selectedTagName);
-  // console.log(globalFeed);
+    isError: isErrorByTag,
+    isLoading: isLoadingFeedByTag,
+    isFetching: isFetchingFeedByTag,
+  } = blogAPI.useGetGlobalFeedByTagQuery({
+    tagname: selectedTagName,
+    token: token ? token : "",
+  });
+
+  console.log(globalFeed);
 
   let setActiveToRender;
   switch (feed) {
     case `${Feed.GlobalFeed}`:
       setActiveToRender = globalFeed;
+      break;
+    case `${Feed.MyFeed}`:
+      setActiveToRender = myFeed;
       break;
     case `${Feed.Tag}`:
       setActiveToRender = feedByTag;
@@ -50,6 +74,11 @@ export const PostsContainer = () => {
     dispatch(userSlice.actions.setActiveFeed(feed));
   };
 
+  const isUpdating = isFetchingFeedByTag || isFetchingGlobalFeed ? true : false;
+  const isLoading =
+    isLoadingFeedByTag || isLoadingGlobalFeed || isLoadingMyFeed;
+  const isError = isErrorByTag || isErrorGlobalFeed || isErrorMyFeed;
+
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
       <div className={Posts.posts}>
@@ -58,7 +87,6 @@ export const PostsContainer = () => {
             className={checkActive(Feed.GlobalFeed)}
             onClick={() => {
               setActive(Feed.GlobalFeed);
-              // refetch();
             }}
           >
             Global Feed
@@ -68,19 +96,18 @@ export const PostsContainer = () => {
             onClick={() => {
               if (isLogined) {
                 setActive(Feed.MyFeed);
-                // refetch();
+              } else {
+                alert("Need to be authorized to unlock this feature");
               }
             }}
           >
             My Feed
           </div>
-
           {selectedTagName ? (
             <div
               className={checkActive(Feed.Tag)}
               onClick={() => {
                 setActive(Feed.Tag);
-                // refetch()
               }}
             >
               <span># </span>
@@ -89,8 +116,8 @@ export const PostsContainer = () => {
           ) : null}
         </div>
 
-        {isLoading && "loading..."}
-        {isError && "SomeError"}
+        {isLoading && <div className={Posts.alerts}>Loading...</div>}
+        {isError && <div className={Posts.alerts}>Some Error Ocured</div>}
 
         {setActiveToRender &&
           setActiveToRender.articles.map((item: any, index: number) => (
@@ -99,12 +126,13 @@ export const PostsContainer = () => {
               title={item.title}
               mainText={item.body}
               key={index}
-              isLiked={item.favorite}
+              isLiked={item.favorited}
               likeCount={item.favoritesCount}
               createdAt={item.createdAt}
               tagsList={item.tagList}
               slug={item.slug}
               imgURL={item.author.image}
+              isUpdating={isUpdating}
             />
           ))}
       </div>

@@ -3,7 +3,7 @@ import { SimpleButton } from "../buttons/simpleTextButton/simpleTextButton";
 import { AddComment } from "../addComment/AddComment";
 import { PostActionPanel } from "../postActionPanel/postActionPanel";
 import ComntsBlock from "./CommentsBlock.module.scss";
-import { blogAPI } from "../../services/blogService";
+import { blogAPI } from "../../api/blogAPI";
 import { Comment } from "../comment/comment";
 
 type CommentsBlockProps = {

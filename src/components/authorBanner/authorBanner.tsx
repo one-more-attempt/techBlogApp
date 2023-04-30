@@ -1,34 +1,94 @@
+import { useEffect, useState } from "react";
+import { blogAPI } from "../../api/blogAPI";
+import { localStorageService } from "../../services/LSService";
+import { stateSelectors } from "../../store";
+import { useAppSelector } from "../../store/hooks/redux-hooks";
 import { FollowButton } from "../buttons/followButton/followButton";
+import { ModalWindow } from "../modalWindow/modalWindow";
 import Banner from "./authorBanner.module.scss";
+
 type AuthorBannerProps = {
-  imgURL: string;
   authorName: string;
 };
 
-export const AuthorBanner = () => {
+export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const isLogined = userDataState.isLogined;
+  const token = localStorageService.getToken();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [follow, { data: followData, isLoading: isFollowLoading }] =
+    blogAPI.useFollowAuthorMutation();
+  const [unFollow, { data: unFollowData, isLoading: isUnfollowLoading }] =
+    blogAPI.useUnFollowAuthorMutation();
+
+  const { data: authorData, isFetching: isAuthorDataLoading } =
+    blogAPI.useGetAuthorInfoByTokenQuery({
+      author: authorName,
+      token: token ? token : "",
+    });
+  console.log(authorData);
+
+  const followAuthor = () => {
+    follow({
+      token: token ? token : "",
+      author: authorName,
+    });
+  };
+  const unfollowAuthor = () => {
+    unFollow({
+      token: token ? token : "",
+      author: authorName,
+    });
+  };
+
+  const status = authorData ? authorData.profile.following : false;
+  const imgURL = authorData ? authorData.profile.image : "";
+
+  useEffect(() => {
+    if (isFollowLoading || isUnfollowLoading || isAuthorDataLoading) {
+      setIsLoading(true);
+    } else {
+      if (!(isFollowLoading || isUnfollowLoading || isAuthorDataLoading)) {
+        setIsLoading(false);
+      }
+    }
+  });
+
+  const followHandler = () => {
+    if (token) {
+      if (status) {
+        unfollowAuthor();
+      } else {
+        followAuthor();
+      }
+    } else {
+      alert("Need to be authorized to unlock this feature")
+    }
+  };
+
   return (
-    <div className={`${Banner.bannerWrapper} `}>
-      <div className={`${Banner.adaptiveLayout} ${Banner.content}`}>
-        <div className={Banner.imgContainer}>
-          <img src="https://api.realworld.io/images/demo-avatar.png" alt="" />
-        </div>
-        <span className={Banner.authorName}>Anah Benešová</span>
-        <div className={Banner.btn}>
-          <FollowButton
-            darkMode={false}
-            isFollow={false}
-            author={"Anah Benešová"}
-          />
+    <>
+      {/* <ModalWindow /> */}
+      <div className={`${Banner.bannerWrapper} `}>
+        <div className={`${Banner.adaptiveLayout} ${Banner.content}`}>
+          <div className={Banner.imgContainer}>
+            <img src={imgURL} alt="" />
+          </div>
+          <span className={Banner.authorName}>{authorName}</span>
+          <div className={Banner.btn}>
+            <FollowButton
+              darkMode={false}
+              isFollow={status}
+              author={authorName}
+              followHandler={followHandler}
+              isLogined={isLogined}
+              isDisabled={false}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
-
-// {{APIURL}}/articles?author=johnjacob
-
-// type FollowButtonProps = {
-//   darkMode: boolean;
-//   isFollow: boolean;
-//   author: string;
-// };

@@ -9,7 +9,5 @@ export const ROUTE_PATH = {
   ACCOUNT_SETTINGS: `/account-settings`,
   NEW_POST: `/new-post`,
   USER_PROFILE: `/profile/:userName`,
-
   NOT_FOUND: `*`,
 };
-// const serverURL = "https://conduit.productionready.io/api/users/login";

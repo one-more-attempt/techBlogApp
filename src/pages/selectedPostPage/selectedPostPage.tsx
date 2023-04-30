@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ArticleBanner } from "../../components/articleBanner/ArticleBanner";
 import { Header } from "../../components/header/Header";
-import { blogAPI } from "../../services/blogService";
+import { blogAPI } from "../../api/blogAPI";
 import { CommentsBlock } from "../../components/CommentsBlock/CommentsBlock";
 import { SelectedPostBody } from "../../components/selectedPostBody/selectedPostBody";
 import { Footer } from "../../components/footer/Footer";

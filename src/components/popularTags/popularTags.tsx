@@ -1,4 +1,4 @@
-import { blogAPI } from "../../services/blogService";
+import { blogAPI } from "../../api/blogAPI";
 import { stateSelectors } from "../../store";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { userSlice } from "../../store/slices/userSlice";

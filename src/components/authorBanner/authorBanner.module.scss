@@ -17,8 +17,10 @@
             overflow: hidden;
             width: 6.25rem;
             height: 6.25rem;
+            border: none;
 
             img {
+                border: none;
                 width: 6.25rem;
                 height: 6.25rem;
             }
@@ -36,6 +38,9 @@
             width: 100%;
             display: flex;
             justify-content: flex-end;
+            // align-items: center;
+
+           
 
         }
 
