@@ -17,4 +17,6 @@ export const API_URL = {
 
   FOLLOW_USER: (user: string) => `/profiles/${user}/follow`,
   GET_AUTHOR_INFO: (user: string) => `/profiles/${user}`,
+
+  COMMENT_TO_POST: (slug: string) => `articles/${slug}/comments`,
 };

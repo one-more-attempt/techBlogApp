@@ -31,6 +31,19 @@
 
 }
 
+.darkMode {
+    opacity: 0.8;
+    color: $buttonBorderGrey;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:active {
+        filter: brightness(90%)
+    }
+}
+
 .active {
     background-color: $white;
     color: $title-grey;
@@ -39,19 +52,6 @@
         background-color: $grey-40;
         color: $title-grey;
         border-color: $grey-20;
-    }
-
-    &:active {
-        filter: brightness(90%)
-    }
-}
-
-.darkMode {
-    opacity: 0.8;
-    color: $buttonBorderGrey;
-
-    &:hover {
-        opacity: 1;
     }
 
     &:active {

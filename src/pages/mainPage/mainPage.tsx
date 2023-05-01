@@ -9,7 +9,7 @@ import { Header } from "../../components/header/Header";
 import { IntroPanel } from "../../components/introPanel/introPanel";
 import { Footer } from "../../components/footer/Footer";
 import { PostsContainer } from "../../components/postsContainer/postsContainer";
-import { userSlice } from "../../store/slices/userSlice";
+import { userSlice, userSliceActions } from "../../store/slices/userSlice";
 import { blogAPI } from "../../api/blogAPI";
 import { Email } from "@mui/icons-material";
 import { localStorageService } from "../../services/LSService";
@@ -19,7 +19,6 @@ export const MainPage = () => {
   const dispatch = useAppDispatch();
   const [getUserInfoTrigger, { data: userInfoData, isLoading, error }] =
     blogAPI.useLazyGetUserInfoByTokenQuery();
-
   useEffect(() => {
     if (token) {
       getUserInfoTrigger(token)

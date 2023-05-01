@@ -10,10 +10,9 @@ type FollowButtonProps = {
   darkMode: boolean;
   isFollow: boolean;
   author: string;
-  isLogined?: boolean;
   isDisabled?: boolean;
   isLoading?: boolean;
-  followHandler?: () => void;
+  followHandler: () => void;
 };
 export const FollowButton = ({
   darkMode,
@@ -23,7 +22,7 @@ export const FollowButton = ({
   isLoading,
   followHandler,
 }: FollowButtonProps) => {
-  const buttonColor = classNames(Follow.followBtn, {
+  const buttonClass = classNames(Follow.followBtn, {
     [Follow.active]: isFollow,
     [Follow.darkMode]: darkMode,
   });
@@ -34,11 +33,9 @@ export const FollowButton = ({
   return (
     <>
       <button
-        className={buttonColor}
+        className={buttonClass}
         disabled={isDisabled}
-        onClick={() => {
-          if (followHandler) followHandler();
-        }}
+        onClick={followHandler}
       >
         {buttonIcon}
         {buttonText}

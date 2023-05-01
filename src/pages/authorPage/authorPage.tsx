@@ -46,7 +46,7 @@ export const AuthorPage = () => {
     if (token) {
       getUserInfoTrigger(token)
         .unwrap()
-        .then((resp) => {
+        .then((resp: any) => {
           const { email, username, bio, image } = resp.user;
           const userDataFromServer = {
             name: username,
@@ -95,7 +95,7 @@ export const AuthorPage = () => {
               {author} Favorited
             </div>
           </div>
-          
+
           {isLoading && "loading"}
           {isError && "some error ocured"}
 

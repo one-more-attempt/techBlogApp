@@ -50,16 +50,12 @@ export const Post = ({
       token: token ? token : "",
       post: slug,
     })
-      .unwrap()
-      .then((resp) => console.log(`refetch`));
   };
   const goToUnLikePost = () => {
     unLikePost({
       token: token ? token : "",
       post: slug,
     })
-      .unwrap()
-      .then((resp) => console.log(`refetch`));
   };
 
   const likeHandler = () => {

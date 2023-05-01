@@ -12,10 +12,7 @@ type AuthorBannerProps = {
 };
 
 export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
-  const userDataState = useAppSelector(stateSelectors.userSliceData);
-  const isLogined = userDataState.isLogined;
   const token = localStorageService.getToken();
-
   const [isLoading, setIsLoading] = useState(false);
   const [follow, { data: followData, isLoading: isFollowLoading }] =
     blogAPI.useFollowAuthorMutation();
@@ -28,20 +25,6 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
       token: token ? token : "",
     });
   console.log(authorData);
-
-  const followAuthor = () => {
-    follow({
-      token: token ? token : "",
-      author: authorName,
-    });
-  };
-  const unfollowAuthor = () => {
-    unFollow({
-      token: token ? token : "",
-      author: authorName,
-    });
-  };
-
   const status = authorData ? authorData.profile.following : false;
   const imgURL = authorData ? authorData.profile.image : "";
 
@@ -58,12 +41,18 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
   const followHandler = () => {
     if (token) {
       if (status) {
-        unfollowAuthor();
+        unFollow({
+          token: token ? token : "",
+          author: authorName,
+        });
       } else {
-        followAuthor();
+        follow({
+          token: token ? token : "",
+          author: authorName,
+        });
       }
     } else {
-      alert("Need to be authorized to unlock this feature")
+      alert("Need to be authorized to unlock this feature");
     }
   };
 
@@ -82,7 +71,6 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
               isFollow={status}
               author={authorName}
               followHandler={followHandler}
-              isLogined={isLogined}
               isDisabled={false}
               isLoading={isLoading}
             />

@@ -66,14 +66,6 @@ export const userSlice = createSlice({
       state.feed = Feed.Tag;
       state.selectedTagName = action.payload;
     },
-
-    // setInitialLoading(state, action: PayloadAction<boolean>) {
-    //   state.initialLoading = action.payload;
-    // },
-
-    // setShowIsNotLoginedError(state, action: PayloadAction<boolean>) {
-    //   state.showIsNotLoginedError = action.payload;
-    // },
   },
 });
 

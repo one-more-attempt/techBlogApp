@@ -9,6 +9,7 @@
     color: $title-grey;
     font-family: Source Sans Pro;
     width: 100%;
+    text-align: right;
 
     .content {
         width: 70%;
@@ -42,9 +43,13 @@
 
 
             .avatar {
-                color: red;
                 height: 2rem;
                 width: 2rem;
+                border-radius: 50%;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 

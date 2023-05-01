@@ -10,7 +10,7 @@ import type {
 export const blogAPI = createApi({
   reducerPath: "blogAPI",
   baseQuery: fetchBaseQuery({ baseUrl: `${API_URL.BASE_URL}` }),
-  tagTypes: ["post", "authorInfo"],
+  tagTypes: ["post", "authorInfo", "selectedPost", "comments"],
   endpoints: (build) => ({
     login: build.mutation<loginResponse, loginObject>({
       query: (loginObj) => ({
@@ -26,7 +26,7 @@ export const blogAPI = createApi({
         method: "POST",
         headers: { authorization: `Token ${token}` },
       }),
-      invalidatesTags: ["authorInfo"],
+      invalidatesTags: ["authorInfo", "selectedPost"],
     }),
 
     UnFollowAuthor: build.mutation<any, { token: string; author: string }>({
@@ -35,7 +35,7 @@ export const blogAPI = createApi({
         method: "DELETE",
         headers: { authorization: `Token ${token}` },
       }),
-      invalidatesTags: ["authorInfo"],
+      invalidatesTags: ["authorInfo", "selectedPost"],
     }),
 
     likePost: build.mutation<any, { token: string; post: string }>({
@@ -44,7 +44,7 @@ export const blogAPI = createApi({
         method: "POST",
         headers: { authorization: `Token ${token}` },
       }),
-      invalidatesTags: ["post"],
+      invalidatesTags: ["post", "selectedPost"],
     }),
 
     unlikePost: build.mutation<any, { token: string; post: string }>({
@@ -53,7 +53,20 @@ export const blogAPI = createApi({
         method: "DELETE",
         headers: { authorization: `Token ${token}` },
       }),
-      invalidatesTags: ["post"],
+      invalidatesTags: ["post", "selectedPost"],
+    }),
+
+    addCommentToPost: build.mutation<
+      any,
+      { token: string; slug: string; comment: { comment: { body: string } } }
+    >({
+      query: ({ token, comment, slug }) => ({
+        url: `${API_URL.COMMENT_TO_POST(slug)}`,
+        method: "POST",
+        headers: { authorization: `Token ${token}` },
+        body: comment,
+      }),
+      invalidatesTags: ["comments"],
     }),
 
     getUserInfoByToken: build.query<loginResponse, string>({
@@ -115,16 +128,20 @@ export const blogAPI = createApi({
       providesTags: (result) => ["post"],
     }),
 
-    getSelectedPost: build.query({
-      query: (slug) => ({
+    getSelectedPost: build.query<any, { slug: string; token: string }>({
+      query: ({ slug, token }) => ({
         url: `${API_URL.POST_BY_SLUG(slug)}`,
+        headers: { authorization: `Token ${token}` },
       }),
+      providesTags: (result) => ["selectedPost"],
     }),
 
-    getPostComments: build.query({
-      query: (slug) => ({
+    getPostComments: build.query<any, { slug: string; token: string }>({
+      query: ({ slug, token }) => ({
         url: `${API_URL.POST_COMMENTS_BY_SLUG(slug)}`,
+        headers: { authorization: `Token ${token}` },
       }),
+      providesTags: (result) => ["comments"],
     }),
   }),
 });

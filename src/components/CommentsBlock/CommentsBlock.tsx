@@ -5,6 +5,11 @@ import { PostActionPanel } from "../postActionPanel/postActionPanel";
 import ComntsBlock from "./CommentsBlock.module.scss";
 import { blogAPI } from "../../api/blogAPI";
 import { Comment } from "../comment/comment";
+import { useAppSelector } from "../../store/hooks/redux-hooks";
+import { stateSelectors } from "../../store";
+import { localStorageService } from "../../services/LSService";
+import { Link } from "react-router-dom";
+import { ROUTE_PATH } from "../../routes/routePathes";
 
 type CommentsBlockProps = {
   author: string;
@@ -14,6 +19,7 @@ type CommentsBlockProps = {
   likesCount: number;
   slug: string;
   imgURL: string;
+  isPostUpdating: boolean;
 };
 export const CommentsBlock = ({
   author,
@@ -22,11 +28,52 @@ export const CommentsBlock = ({
   following,
   likesCount,
   slug,
-  imgURL
+  imgURL,
+  isPostUpdating,
 }: CommentsBlockProps) => {
-  const { data, error, isLoading } = blogAPI.useGetPostCommentsQuery(slug);
-  console.log(data);
+  const token = localStorageService.getToken() || "";
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const userImgUrl = userDataState.imageURL;
 
+  const {
+    data: postCommentData,
+    error: postCommentError,
+    isLoading: postCommentLoading,
+    isFetching: isPostsComentsFetching,
+  } = blogAPI.useGetPostCommentsQuery({
+    slug,
+    token,
+  });
+
+  let commentsOptional;
+  if (token) {
+    commentsOptional = (
+      <>
+        <AddComment imgURL={userImgUrl} slug={slug} />
+        {postCommentLoading && "Loading..."}
+        {postCommentError && "Something went wrong..."}
+        {postCommentData &&
+          postCommentData.comments.map((item: any) => (
+            <Comment
+              date={item.createdAt}
+              name={item.author.username}
+              text={item.body}
+              imgURL={item.author.image}
+              key={item.id}
+            />
+          ))}
+      </>
+    );
+  } else {
+    commentsOptional = (
+      <div className={ComntsBlock.notification}>
+        You need to be autorized to see comments.
+        <br />
+        Please, <Link to={ROUTE_PATH.SIGN_IN}>sign in</Link> or{" "}
+        <Link to={ROUTE_PATH.SIGN_UP}>sign up</Link>.
+      </div>
+    );
+  }
   return (
     <div
       className={`${ComntsBlock.adaptiveLayout} ${ComntsBlock.commentBlock}`}
@@ -36,25 +83,13 @@ export const CommentsBlock = ({
         darkMode={false}
         date={date}
         isLiked={favorited}
-        isFollowing={following}
+        following={following}
         likesCount={likesCount}
-        imgURL = {imgURL}
+        imgURL={imgURL}
+        isPostUpdating={isPostUpdating}
+        slug={slug}
       />
-      <AddComment />
-      {data &&
-        data.comments.map((item: any) => (
-          <Comment
-            date={item.createdAt}
-            name={item.author.username}
-            text={item.body}
-            imgURL={item.author.image}
-            key = {item.id}
-          />
-        ))}
+      {commentsOptional}
     </div>
   );
 };
-// date: string;
-// name: string;
-// imgURL: string;
-// text: string;
