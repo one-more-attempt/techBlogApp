@@ -43,7 +43,7 @@ export const Post = ({
   const limitedText =
     mainText.length > 500 ? mainText.slice(0, 500).concat("...") : mainText;
   const limitedtitle =
-    title.length > 500 ? title.slice(0, 500).concat("...") : title;
+    title.length > 120 ? title.slice(0, 120).concat("...") : title;
 
   const goToLikePost = () => {
     likePost({

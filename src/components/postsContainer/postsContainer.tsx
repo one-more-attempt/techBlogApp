@@ -6,24 +6,36 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { stateSelectors } from "../../store";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
-import { Feed, userSlice } from "../../store/slices/userSlice";
+import {
+  Feed,
+  userSlice,
+  userSliceActions,
+} from "../../store/slices/userSlice";
 import { blogAPI } from "../../api/blogAPI";
 import { ErrorNotification } from "../errorNotification/errorNotification";
 import { localStorageService } from "../../services/LSService";
 import { ReactComponent as Spinner } from "../../img/spinner.svg";
 
 export const PostsContainer = () => {
-  const token = localStorageService.getToken();
+  const token = localStorageService.getToken() || "";
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const dispatch = useAppDispatch();
+
+  const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
+  const [pageCounter, setPageCounter] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [activePage, setActivePage] = useState(1);
   const { selectedTagName, feed, isLogined } = userDataState;
 
-  const {
-    data: globalFeed,
-    isLoading: isLoadingGlobalFeed,
-    isFetching: isFetchingGlobalFeed,
-    isError: isErrorGlobalFeed,
-  } = blogAPI.useGetGlobalPostsQuery(token ? token : "");
+  const [
+    getGlobalFeedTrigger,
+    {
+      data: globalFeed,
+      isLoading: isLoadingGlobalFeed,
+      isFetching: isFetchingGlobalFeed,
+      isError: isErrorGlobalFeed,
+    },
+  ] = blogAPI.useLazyGetGlobalPostsQuery();
 
   const [
     myFeedTrigger,
@@ -35,11 +47,6 @@ export const PostsContainer = () => {
     },
   ] = blogAPI.useLazyGetMyFeedQuery();
 
-  useEffect(() => {
-    if (token) {
-      myFeedTrigger(token);
-    }
-  });
   const {
     data: feedByTag,
     isError: isErrorByTag,
@@ -50,7 +57,27 @@ export const PostsContainer = () => {
     token: token ? token : "",
   });
 
-  console.log(globalFeed);
+  useEffect(() => {
+    if (token) {
+      myFeedTrigger(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    getGlobalFeedTrigger({
+      token,
+      offset: currentPaginationOffset,
+      limit,
+    })
+      .unwrap()
+      .then((resp) => {
+        // typeof ()resp.articlesCount);
+        const restOfDiv = resp.articlesCount % limit;
+        const divResult = Math.ceil(resp.articlesCount / limit);
+        const certainDiv = resp.articleCount / limit;
+        restOfDiv > 0 ? setPageCounter(divResult) : setPageCounter(certainDiv);
+      });
+  }, [currentPaginationOffset]);
 
   let setActiveToRender;
   switch (feed) {
@@ -71,13 +98,16 @@ export const PostsContainer = () => {
     if (userDataState.feed === feed) return Posts.activeFeed;
   };
   const setActive = (feed: Feed) => {
-    dispatch(userSlice.actions.setActiveFeed(feed));
+    dispatch(userSliceActions.setActiveFeed(feed));
   };
 
   const isUpdating = isFetchingFeedByTag || isFetchingGlobalFeed ? true : false;
   const isLoading =
     isLoadingFeedByTag || isLoadingGlobalFeed || isLoadingMyFeed;
   const isError = isErrorByTag || isErrorGlobalFeed || isErrorMyFeed;
+
+  console.log(globalFeed);
+  console.log(pageCounter);
 
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
@@ -135,6 +165,25 @@ export const PostsContainer = () => {
               isUpdating={isUpdating}
             />
           ))}
+
+        <div>
+          {[...Array(pageCounter)].map((item, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setCurrentPaginationOffset(i * limit);
+                setActivePage(i+1)
+              }}
+            >
+              {i + 1}
+
+              { activePage === (i+1) ? "+" : ""}
+            </button>
+          ))}
+          {isFetchingGlobalFeed && (
+            <div className={Posts.alerts}>Loading...</div>
+          )}
+        </div>
       </div>
 
       <div className={Posts.tags}>

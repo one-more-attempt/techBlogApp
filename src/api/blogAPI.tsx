@@ -84,9 +84,12 @@ export const blogAPI = createApi({
       providesTags: (result) => ["authorInfo"],
     }),
 
-    getGlobalPosts: build.query<any, string>({
-      query: (token) => ({
-        url: `${API_URL.GLOBAL_POSTS}`,
+    getGlobalPosts: build.query<
+      any,
+      { token: string; offset: number; limit: number }
+    >({
+      query: ({ token, offset, limit }) => ({
+        url: `${API_URL.GLOBAL_POSTS(offset, limit)}`,
         headers: { authorization: `Token ${token}` },
       }),
       providesTags: (result) => ["post"],
