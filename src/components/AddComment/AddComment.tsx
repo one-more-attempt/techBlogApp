@@ -32,6 +32,9 @@ export const AddComment = ({ imgURL, slug }: AddCommentProps) => {
   useEffect(() => {
     text.length > 5 ? setButtonStatus(false) : setButtonStatus(true);
   });
+
+  console.log('addCommentToPostData', addCommentToPostData);
+  
   return (
     <div className={`${NewComment.addCommentWrapper} `}>
       <div className={NewComment.content}>
@@ -60,6 +63,3 @@ export const AddComment = ({ imgURL, slug }: AddCommentProps) => {
     </div>
   );
 };
-function postCommentData(postCommentData: any) {
-  throw new Error("Function not implemented.");
-}

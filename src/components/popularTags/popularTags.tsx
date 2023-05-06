@@ -1,18 +1,24 @@
 import { blogAPI } from "../../api/blogAPI";
 import { stateSelectors } from "../../store";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
-import { userSlice } from "../../store/slices/userSlice";
+import { Feed } from "../postsContainer/postsContainer";
+
 import PopTags from "./popularTags.module.scss";
 
-export const PopularTags = () => {
-  const userDataState = useAppSelector(stateSelectors.userSliceData);
-  const dispatch = useAppDispatch();
-  const setActiveTag = (tagName: string) => {
-    dispatch(userSlice.actions.setActiveFeedTag(tagName));
-  };
+type PopularTagsProps = {
+  setSelectedPopularTag: (arg: string) => void;
+  setActiveFeed: (arg: Feed) => void;
+  setPageCounter: (arg: number) => void;
+};
+
+export const PopularTags = ({
+  setSelectedPopularTag,
+  setActiveFeed,
+  setPageCounter,
+}: PopularTagsProps) => {
   const { data, error, isLoading, isSuccess } =
-    blogAPI.useGetPopularTagsQuery("");
-  // console.log(data);
+    blogAPI.useGetPopularTagsQuery(true);
+  console.log(data);
 
   return (
     <div className={PopTags.tagsWrapper}>
@@ -25,7 +31,9 @@ export const PopularTags = () => {
             <div
               key={index}
               onClick={() => {
-                setActiveTag(item);
+                setSelectedPopularTag(item);
+                setActiveFeed(Feed.Tag);
+                setPageCounter(0);
               }}
             >
               {item}

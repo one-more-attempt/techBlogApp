@@ -7,7 +7,7 @@ import { SelectedPostBody } from "../../components/selectedPostBody/selectedPost
 import { Footer } from "../../components/footer/Footer";
 import { localStorageService } from "../../services/LSService";
 import { useEffect } from "react";
-import { userSlice } from "../../store/slices/userSlice";
+import { userSlice, userSliceActions } from "../../store/slices/userSlice";
 import { useAppDispatch } from "../../store/hooks/redux-hooks";
 
 export const SelectedPostPage = () => {
@@ -31,7 +31,7 @@ export const SelectedPostPage = () => {
             email: email,
             imageURL: image,
           };
-          dispatch(userSlice.actions.setIsLogined(userDataFromServer));
+          dispatch(userSliceActions.setIsLogined(userDataFromServer));
           console.log(userInfoData);
         });
     }
@@ -44,7 +44,7 @@ export const SelectedPostPage = () => {
     isFetching: isSelectedPostFetching,
     isLoading,
   } = blogAPI.useGetSelectedPostQuery({ slug: slugName, token });
-  console.log(data);
+  console.log(" selected post", data);
 
   const isPostUpdating = isSelectedPostFetching ? true : false;
   return (
@@ -62,8 +62,8 @@ export const SelectedPostPage = () => {
               following={data.article.author.following}
               likesCount={data.article.favoritesCount}
               imgURL={data.article.author.image}
-              isPostUpdating= {isPostUpdating}
-              slug = {data.article.slug}
+              isPostUpdating={isPostUpdating}
+              slug={data.article.slug}
             />
             <SelectedPostBody
               text={data.article.body}
@@ -78,7 +78,6 @@ export const SelectedPostPage = () => {
               slug={data.article.slug}
               imgURL={data.article.author.image}
               isPostUpdating={isPostUpdating}
-              
             />
           </>
         )}

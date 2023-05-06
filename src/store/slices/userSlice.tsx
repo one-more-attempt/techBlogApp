@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export enum Feed {
-  GlobalFeed = "GLOBAL_FEED",
-  MyFeed = "MY_FEED",
-  Tag = "TAG",
-}
 
 export type UserStateType = {
   userName: string;
@@ -12,9 +7,6 @@ export type UserStateType = {
   isLogined: boolean;
   bio: string;
   imageURL: string;
-  feed: Feed;
-  selectedTagName: string;
-  initialLoading: boolean;
 };
 
 const INITIAL_STATE: UserStateType = {
@@ -23,9 +15,6 @@ const INITIAL_STATE: UserStateType = {
   email: "",
   bio: "",
   imageURL: "",
-  feed: Feed.GlobalFeed,
-  initialLoading: false,
-  selectedTagName: "",
 };
 
 export const userSlice = createSlice({
@@ -53,18 +42,6 @@ export const userSlice = createSlice({
       state.email = "";
       state.bio = "";
       state.imageURL = "";
-      state.feed = Feed.GlobalFeed;
-      state.initialLoading = false;
-      state.selectedTagName = "";
-    },
-
-    setActiveFeed(state, action: PayloadAction<Feed>) {
-      state.feed = action.payload;
-    },
-
-    setActiveFeedTag(state, action: PayloadAction<string>) {
-      state.feed = Feed.Tag;
-      state.selectedTagName = action.payload;
     },
   },
 });

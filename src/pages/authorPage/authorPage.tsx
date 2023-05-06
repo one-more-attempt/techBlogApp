@@ -16,31 +16,47 @@ enum FeedSelector {
 }
 
 export const AuthorPage = () => {
-  const token = localStorageService.getToken();
-  const dispatch = useAppDispatch();
   const { author } = useParams();
   const authorName = author ? author : "";
+  const token = localStorageService.getToken() || "";
+  const dispatch = useAppDispatch();
+
   const [feedSelector, setFeedSelector] = useState(FeedSelector.Author);
+
+  //pagination
+  const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
+  const [pageCounter, setPageCounter] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [activePage, setActivePage] = useState(1);
 
   const [getUserInfoTrigger, { data: userInfoData }] =
     blogAPI.useLazyGetUserInfoByTokenQuery();
 
-  const {
-    data: authorPosts,
-    isLoading: isAuthorPostsLoading,
-    isFetching: isAuthorPostsFetching,
-    isError: isAuthorPostsError,
-  } = blogAPI.useGetAuthorPostsQuery({
-    author: authorName,
-    token: token ? token : "",
-  });
+  const [
+    getAuthorPostsTrigger,
+    {
+      data: authorPosts,
+      isLoading: isAuthorPostsLoading,
+      isFetching: isAuthorPostsFetching,
+      isError: isAuthorPostsError,
+    },
+  ] = blogAPI.useLazyGetAuthorPostsQuery();
 
-  const {
-    data: authorLikedPosts,
-    isFetching: isAuthorLikedPostsFetching,
-    isLoading: isAuthorLikedPostsLoading,
-    isError: isAuthorLikedPostsError,
-  } = blogAPI.useGetAuthorFavoritedPostsQuery(authorName);
+  const [
+    getAuthorFavouritePostsQuery,
+    {
+      data: authorLikedPosts,
+      isFetching: isAuthorLikedPostsFetching,
+      isLoading: isAuthorLikedPostsLoading,
+      isError: isAuthorLikedPostsError,
+    },
+  ] = blogAPI.useLazyGetAuthorFavoritedPostsQuery();
+
+  const postsToRender =
+    feedSelector === FeedSelector.Author ? authorPosts : authorLikedPosts;
+  const checkActive = (feed: FeedSelector) => {
+    if (feed === feedSelector) return Author.activeFeed;
+  };
 
   useEffect(() => {
     if (token) {
@@ -60,14 +76,57 @@ export const AuthorPage = () => {
     }
   }, []);
 
-  const postsToRender =
-    feedSelector === FeedSelector.Author ? authorPosts : authorLikedPosts;
-  const checkActive = (feed: FeedSelector) => {
-    if (feed === feedSelector) return Author.activeFeed;
-  };
+  useEffect(() => {
+    if (postsToRender === authorPosts) {    
+      setPageCounter(0);
+      getAuthorPostsTrigger({
+        author: authorName,
+        token: token,
+        offset: currentPaginationOffset,
+        limit: limit,
+      })
+        .unwrap()
+        .then((resp: any) => {
+          if (resp.articlesCount) {
+            const restOfDiv = resp.articlesCount % limit;
+            const divResult = Math.ceil(resp.articlesCount / limit);
+            const certainDiv = resp.articleCount / limit;
+            restOfDiv > 0
+              ? setPageCounter(divResult)
+              : setPageCounter(certainDiv);
+          } else {
+            setPageCounter(0);
+          }
+        });
+    }
+    if (postsToRender === authorLikedPosts) {
+      setPageCounter(0);
+      getAuthorFavouritePostsQuery({
+        author: authorName,
+        token: token,
+        offset: currentPaginationOffset,
+        limit: limit,
+      })
+        .unwrap()
+        .then((resp: any) => {
+          if (resp.articlesCount) {
+            const restOfDiv = resp.articlesCount % limit;
+            const divResult = Math.ceil(resp.articlesCount / limit);
+            const certainDiv = resp.articleCount / limit;
+            restOfDiv > 0
+              ? setPageCounter(divResult)
+              : setPageCounter(certainDiv);
+          } else {
+            setPageCounter(0);
+          }
+        });
+    }
+  }, [currentPaginationOffset, postsToRender]);
 
   console.log(authorPosts);
   console.log(authorLikedPosts);
+  
+
 
   const isPostsUpdating =
     isAuthorPostsFetching || isAuthorLikedPostsFetching ? true : false;
@@ -115,6 +174,25 @@ export const AuthorPage = () => {
                 isUpdating={isPostsUpdating}
               />
             ))}
+
+          <div className={Author.paginationWrapper}>
+            {pageCounter
+              ? [...Array(pageCounter)].map((item, i) => (
+                  <button
+                    className={`${Author.paginationButton} ${
+                      activePage === i + 1 ? Author.active : ""
+                    } `}
+                    key={i}
+                    onClick={() => {
+                      setCurrentPaginationOffset(i * limit);
+                      setActivePage(i + 1);
+                    }}
+                  >
+                    {i + 1}
+                  </button>
+                ))
+              : null}
+          </div>
         </div>
       </div>
       <Footer />

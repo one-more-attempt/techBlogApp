@@ -5,7 +5,7 @@ import { InputTypes, SimpleInput } from "../../components/inputs/simpleInput";
 import { SimpleButton } from "../../components/buttons/simpleTextButton/simpleTextButton";
 import SignIn from "./signInPage.module.scss";
 import { blogAPI } from "../../api/blogAPI";
-import { loginObject, loginResponse } from "../../types/types";
+import { loginInput, loginResponse } from "../../types/types";
 import { ErrorNotification } from "../../components/errorNotification/errorNotification";
 import { userSlice } from "../../store/slices/userSlice";
 import { stateSelectors } from "../../store";
@@ -41,7 +41,7 @@ export const SignInPage = () => {
   }, [emailInput, passwordInput]);
 
   const tryToLogin = async () => {
-    const obj: loginObject = {
+    const obj = {
       user: { email: emailInput, password: passwordInput },
     };
 

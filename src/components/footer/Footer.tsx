@@ -6,7 +6,7 @@ export const Footer = () => {
       <div className={FooterStyles.adaptiveLayout}>
         <div className={FooterStyles.footerLogo}>conduit </div>
         <div className={FooterStyles.footerText}>
-          © 2023. An interactive learning project from Thinkster. Code licensed
+          © 2023. An interactive learning project by 1more.attempt. Code licensed
           under MIT.{" "}
         </div>
       </div>

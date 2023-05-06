@@ -34,3 +34,34 @@
 .contentWrapper {
     padding: 0 5rem
 }
+
+.paginationWrapper {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+
+    .paginationButton {
+        background-color: $main-green;
+        background-color: $white;
+        cursor: pointer;
+        padding: 0.5rem;
+        border: 1px solid $grey-40;
+
+        &:first-child {
+            border-bottom-left-radius: 0.25rem;
+            border-top-left-radius: 0.25rem;
+        }
+
+        &:last-child {
+            border-bottom-right-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+        }
+    }
+
+    .active {
+        background-color: $main-green;
+        color: white;
+         border-color: $main-green ;
+
+    }
+}

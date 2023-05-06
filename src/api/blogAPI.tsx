@@ -1,10 +1,24 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { API_URL } from "./API_URL";
 import type {
-  loginObject,
+  loginInput,
   loginResponse,
   AuthorInfoResponse,
-  AuthorInfoBody,
+  FollowUnfollowAuthorInput,
+  LikeUnlikePostInput,
+  likeUnlikePostResponse,
+  allCommentsInput,
+  addCommentToPostInput,
+  AuthorInfoInput,
+  getCommentsResponse,
+  addCommentResponse,
+  getFeedInput,
+  getFeedByTagNameInput,
+  getPostsResponse,
+  getAuthorPostsInput,
+  getSelectedPostInput,
+  getSelectedPostResponse,
+  getAllPopularTagsResponse,
 } from "../types/types";
 
 export const blogAPI = createApi({
@@ -12,7 +26,7 @@ export const blogAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${API_URL.BASE_URL}` }),
   tagTypes: ["post", "authorInfo", "selectedPost", "comments"],
   endpoints: (build) => ({
-    login: build.mutation<loginResponse, loginObject>({
+    login: build.mutation<loginResponse, loginInput>({
       query: (loginObj) => ({
         url: `${API_URL.LOGIN}`,
         method: "POST",
@@ -20,54 +34,66 @@ export const blogAPI = createApi({
       }),
     }),
 
-    followAuthor: build.mutation<any, { token: string; author: string }>({
-      query: ({ token, author }) => ({
-        url: `${API_URL.FOLLOW_USER(author)}`,
-        method: "POST",
-        headers: { authorization: `Token ${token}` },
-      }),
-      invalidatesTags: ["authorInfo", "selectedPost"],
-    }),
+    followAuthor: build.mutation<AuthorInfoResponse, FollowUnfollowAuthorInput>(
+      {
+        query: ({ token, author }) => ({
+          url: `${API_URL.FOLLOW_USER(author)}`,
+          method: "POST",
+          headers: { authorization: `Token ${token}` },
+        }),
+        invalidatesTags: ["authorInfo", "selectedPost"],
+      }
+    ),
 
-    UnFollowAuthor: build.mutation<any, { token: string; author: string }>({
-      query: ({ token, author }) => ({
-        url: `${API_URL.FOLLOW_USER(author)}`,
-        method: "DELETE",
-        headers: { authorization: `Token ${token}` },
-      }),
-      invalidatesTags: ["authorInfo", "selectedPost"],
-    }),
-
-    likePost: build.mutation<any, { token: string; post: string }>({
-      query: ({ token, post }) => ({
-        url: `${API_URL.LIKE_POST(post)}`,
-        method: "POST",
-        headers: { authorization: `Token ${token}` },
-      }),
-      invalidatesTags: ["post", "selectedPost"],
-    }),
-
-    unlikePost: build.mutation<any, { token: string; post: string }>({
-      query: ({ token, post }) => ({
-        url: `${API_URL.LIKE_POST(post)}`,
-        method: "DELETE",
-        headers: { authorization: `Token ${token}` },
-      }),
-      invalidatesTags: ["post", "selectedPost"],
-    }),
-
-    addCommentToPost: build.mutation<
-      any,
-      { token: string; slug: string; comment: { comment: { body: string } } }
+    UnFollowAuthor: build.mutation<
+      AuthorInfoResponse,
+      FollowUnfollowAuthorInput
     >({
-      query: ({ token, comment, slug }) => ({
-        url: `${API_URL.COMMENT_TO_POST(slug)}`,
+      query: ({ token, author }) => ({
+        url: `${API_URL.FOLLOW_USER(author)}`,
+        method: "DELETE",
+        headers: { authorization: `Token ${token}` },
+      }),
+      invalidatesTags: ["authorInfo", "selectedPost"],
+    }),
+
+    likePost: build.mutation<likeUnlikePostResponse, LikeUnlikePostInput>({
+      query: ({ token, post }) => ({
+        url: `${API_URL.LIKE_POST(post)}`,
         method: "POST",
         headers: { authorization: `Token ${token}` },
-        body: comment,
       }),
-      invalidatesTags: ["comments"],
+      invalidatesTags: ["post", "selectedPost"],
     }),
+
+    unlikePost: build.mutation<likeUnlikePostResponse, LikeUnlikePostInput>({
+      query: ({ token, post }) => ({
+        url: `${API_URL.LIKE_POST(post)}`,
+        method: "DELETE",
+        headers: { authorization: `Token ${token}` },
+      }),
+      invalidatesTags: ["post", "selectedPost"],
+    }),
+
+    getPostComments: build.query<getCommentsResponse, allCommentsInput>({
+      query: ({ slug, token }) => ({
+        url: `${API_URL.POST_COMMENTS_BY_SLUG(slug)}`,
+        headers: { authorization: `Token ${token}` },
+      }),
+      providesTags: (result) => ["comments"],
+    }),
+
+    addCommentToPost: build.mutation<addCommentResponse, addCommentToPostInput>(
+      {
+        query: ({ token, comment, slug }) => ({
+          url: `${API_URL.COMMENT_TO_POST(slug)}`,
+          method: "POST",
+          headers: { authorization: `Token ${token}` },
+          body: comment,
+        }),
+        invalidatesTags: ["comments"],
+      }
+    ),
 
     getUserInfoByToken: build.query<loginResponse, string>({
       query: (token) => ({
@@ -76,7 +102,7 @@ export const blogAPI = createApi({
       }),
     }),
 
-    getAuthorInfoByToken: build.query<AuthorInfoResponse, AuthorInfoBody>({
+    getAuthorInfoByToken: build.query<AuthorInfoResponse, AuthorInfoInput>({
       query: ({ author, token }) => ({
         url: `${API_URL.GET_AUTHOR_INFO(author)}`,
         headers: { authorization: `Token ${token}` },
@@ -84,10 +110,7 @@ export const blogAPI = createApi({
       providesTags: (result) => ["authorInfo"],
     }),
 
-    getGlobalPosts: build.query<
-      any,
-      { token: string; offset: number; limit: number }
-    >({
+    getGlobalPosts: build.query<getPostsResponse, getFeedInput>({
       query: ({ token, offset, limit }) => ({
         url: `${API_URL.GLOBAL_POSTS(offset, limit)}`,
         headers: { authorization: `Token ${token}` },
@@ -95,56 +118,54 @@ export const blogAPI = createApi({
       providesTags: (result) => ["post"],
     }),
 
-    getMyFeed: build.query<any, string>({
-      query: (token) => ({
-        url: `${API_URL.MY_FEED}`,
+    getMyFeed: build.query<getPostsResponse, getFeedInput>({
+      query: ({ token, offset, limit }) => ({
+        url: `${API_URL.MY_FEED(offset, limit)}`,
+
         headers: { authorization: `Token ${token}` },
       }),
       providesTags: (result) => ["post"],
     }),
 
-    getAuthorPosts: build.query<any, { author: string; token: string }>({
-      query: ({ author, token }) => ({
-        url: `${API_URL.AUTHOR_POSTS(author)}`,
+    getGlobalFeedByTag: build.query<getPostsResponse, getFeedByTagNameInput>({
+      query: ({ tagname, token, offset, limit }) => ({
+        url: `${API_URL.GLOBAL_WITH_TAG(tagname, offset, limit)}`,
         headers: { authorization: `Token ${token}` },
       }),
       providesTags: (result) => ["post"],
     }),
 
-    getAuthorFavoritedPosts: build.query({
-      query: (author: string) => ({
-        url: `${API_URL.AUTHOR_LIKED_POSTS(author)}`,
+    getAuthorPosts: build.query<getPostsResponse, getAuthorPostsInput>({
+      query: ({ author, token, offset, limit }) => ({
+        url: `${API_URL.AUTHOR_POSTS(author, offset, limit)}`,
+        headers: { authorization: `Token ${token}` },
       }),
+      providesTags: (result) => ["post"],
     }),
 
-    getPopularTags: build.query({
+    getAuthorFavoritedPosts: build.query<getPostsResponse, getAuthorPostsInput>(
+      {
+        query: ({ author, token, offset, limit }) => ({
+          url: `${API_URL.AUTHOR_LIKED_POSTS(author, offset, limit)}`,
+          headers: { authorization: `Token ${token}` },
+        }),
+      }
+    ),
+
+    getPopularTags: build.query<getAllPopularTagsResponse, boolean>({
       query: () => ({
         url: `${API_URL.POPULAR_TAGS}`,
       }),
     }),
 
-    getGlobalFeedByTag: build.query<any, { tagname: string; token: string }>({
-      query: ({ tagname, token }) => ({
-        url: `${API_URL.GLOBAL_WITH_TAG(tagname)}`,
-        headers: { authorization: `Token ${token}` },
-      }),
-      providesTags: (result) => ["post"],
-    }),
-
-    getSelectedPost: build.query<any, { slug: string; token: string }>({
-      query: ({ slug, token }) => ({
-        url: `${API_URL.POST_BY_SLUG(slug)}`,
-        headers: { authorization: `Token ${token}` },
-      }),
-      providesTags: (result) => ["selectedPost"],
-    }),
-
-    getPostComments: build.query<any, { slug: string; token: string }>({
-      query: ({ slug, token }) => ({
-        url: `${API_URL.POST_COMMENTS_BY_SLUG(slug)}`,
-        headers: { authorization: `Token ${token}` },
-      }),
-      providesTags: (result) => ["comments"],
-    }),
+    getSelectedPost: build.query<getSelectedPostResponse, getSelectedPostInput>(
+      {
+        query: ({ slug, token }) => ({
+          url: `${API_URL.POST_BY_SLUG(slug)}`,
+          headers: { authorization: `Token ${token}` },
+        }),
+        providesTags: (result) => ["selectedPost"],
+      }
+    ),
   }),
 });

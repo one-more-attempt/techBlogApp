@@ -6,27 +6,37 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { stateSelectors } from "../../store";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
-import {
-  Feed,
-  userSlice,
-  userSliceActions,
-} from "../../store/slices/userSlice";
+import { userSlice, userSliceActions } from "../../store/slices/userSlice";
+
 import { blogAPI } from "../../api/blogAPI";
 import { ErrorNotification } from "../errorNotification/errorNotification";
 import { localStorageService } from "../../services/LSService";
 import { ReactComponent as Spinner } from "../../img/spinner.svg";
+import { getPostsResponse } from "../../types/types";
+
+export enum Feed {
+  GlobalFeed = "GLOBAL_FEED",
+  MyFeed = "MY_FEED",
+  Tag = "TAG",
+}
 
 export const PostsContainer = () => {
+  //login
   const token = localStorageService.getToken() || "";
   const userDataState = useAppSelector(stateSelectors.userSliceData);
-  const dispatch = useAppDispatch();
 
+  //feed selector
+  const [activeFeed, setActiveFeed] = useState<string>(Feed.GlobalFeed);
+  const [selectedPopularTag, setSelectedPopularTag] = useState("");
+
+  //pagination
   const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
   const [pageCounter, setPageCounter] = useState(0);
   const [limit, setLimit] = useState(10);
   const [activePage, setActivePage] = useState(1);
-  const { selectedTagName, feed, isLogined } = userDataState;
+  const { isLogined } = userDataState;
 
+  //data
   const [
     getGlobalFeedTrigger,
     {
@@ -47,110 +57,155 @@ export const PostsContainer = () => {
     },
   ] = blogAPI.useLazyGetMyFeedQuery();
 
-  const {
-    data: feedByTag,
-    isError: isErrorByTag,
-    isLoading: isLoadingFeedByTag,
-    isFetching: isFetchingFeedByTag,
-  } = blogAPI.useGetGlobalFeedByTagQuery({
-    tagname: selectedTagName,
-    token: token ? token : "",
-  });
+  const [
+    globalFeedByTagTrigger,
+    {
+      data: feedByTag,
+      isError: isErrorByTag,
+      isLoading: isLoadingFeedByTag,
+      isFetching: isFetchingFeedByTag,
+    },
+  ] = blogAPI.useLazyGetGlobalFeedByTagQuery();
 
-  useEffect(() => {
-    if (token) {
-      myFeedTrigger(token);
-    }
-  }, []);
+  let activeToRender: getPostsResponse | undefined;
 
-  useEffect(() => {
-    getGlobalFeedTrigger({
-      token,
-      offset: currentPaginationOffset,
-      limit,
-    })
-      .unwrap()
-      .then((resp) => {
-        // typeof ()resp.articlesCount);
-        const restOfDiv = resp.articlesCount % limit;
-        const divResult = Math.ceil(resp.articlesCount / limit);
-        const certainDiv = resp.articleCount / limit;
-        restOfDiv > 0 ? setPageCounter(divResult) : setPageCounter(certainDiv);
-      });
-  }, [currentPaginationOffset]);
+  if (activeFeed === Feed.GlobalFeed) {
+    activeToRender = globalFeed;
+  }
+  if (activeFeed === Feed.MyFeed) {
+    console.log(`==`);
 
-  let setActiveToRender;
-  switch (feed) {
-    case `${Feed.GlobalFeed}`:
-      setActiveToRender = globalFeed;
-      break;
-    case `${Feed.MyFeed}`:
-      setActiveToRender = myFeed;
-      break;
-    case `${Feed.Tag}`:
-      setActiveToRender = feedByTag;
-      break;
-    default:
-      setActiveToRender = globalFeed;
+    activeToRender = myFeed;
+  }
+  if (activeFeed === Feed.Tag) {
+    activeToRender = feedByTag;
   }
 
+  useEffect(() => {
+    if (activeToRender === globalFeed) {
+      getGlobalFeedTrigger({
+        token: "",
+        offset: currentPaginationOffset,
+        limit,
+      })
+        .unwrap()
+        .then((resp) => {
+          const restOfDiv = resp.articlesCount % limit;
+          const divResult = Math.ceil(resp.articlesCount / limit);
+          const certainDiv = resp.articlesCount / limit;
+          restOfDiv > 0
+            ? setPageCounter(divResult)
+            : setPageCounter(certainDiv);
+        });
+    }
+
+    if (activeToRender === myFeed) {
+      myFeedTrigger({
+        token,
+        offset: currentPaginationOffset,
+        limit,
+      })
+        .unwrap()
+        .then((resp) => {
+          const restOfDiv = resp.articlesCount % limit;
+          const divResult = Math.ceil(resp.articlesCount / limit);
+          const certainDiv = resp.articlesCount / limit;
+          restOfDiv > 0
+            ? setPageCounter(divResult)
+            : setPageCounter(certainDiv);
+        });
+    }
+    if (activeToRender === feedByTag) {
+      globalFeedByTagTrigger({
+        tagname: selectedPopularTag,
+        token: token,
+        offset: currentPaginationOffset,
+        limit: limit,
+      })
+        .unwrap()
+        .then((resp) => {
+          const restOfDiv = resp.articlesCount % limit;
+          const divResult = Math.ceil(resp.articlesCount / limit);
+          const certainDiv = resp.articlesCount / limit;
+          restOfDiv > 0
+            ? setPageCounter(divResult)
+            : setPageCounter(certainDiv);
+        });
+    }
+  }, [currentPaginationOffset, activeToRender, selectedPopularTag]);
+
   const checkActive = (feed: Feed) => {
-    if (userDataState.feed === feed) return Posts.activeFeed;
-  };
-  const setActive = (feed: Feed) => {
-    dispatch(userSliceActions.setActiveFeed(feed));
+    if (activeFeed === feed) return Posts.activeFeed;
   };
 
-  const isUpdating = isFetchingFeedByTag || isFetchingGlobalFeed ? true : false;
+  const isUpdating =
+    isFetchingFeedByTag || isFetchingGlobalFeed || isFetchingMyFeed;
   const isLoading =
     isLoadingFeedByTag || isLoadingGlobalFeed || isLoadingMyFeed;
   const isError = isErrorByTag || isErrorGlobalFeed || isErrorMyFeed;
 
-  console.log(globalFeed);
-  console.log(pageCounter);
+  console.log(activeToRender);
+  // console.log(pageCounter);
+
+  const feedSelectorHandler = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    isNeedToCheckAuthStatus: boolean
+  ) => {
+    if (isNeedToCheckAuthStatus) {
+      if (isLogined) {
+        setActiveFeed(Feed.MyFeed);
+        setPageCounter(0);
+      } else {
+        alert("Need to be authorized to unlock this feature");
+      }
+    } else {
+      setActiveFeed(event.currentTarget.name);
+      setPageCounter(0);
+    }
+  };
 
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
       <div className={Posts.posts}>
         <div className={Posts.feedTooglePanel}>
-          <div
+          <button
+            name={Feed.GlobalFeed}
             className={checkActive(Feed.GlobalFeed)}
-            onClick={() => {
-              setActive(Feed.GlobalFeed);
+            onClick={(event) => {
+              feedSelectorHandler(event, false);
             }}
           >
             Global Feed
-          </div>
-          <div
+          </button>
+          <button
             className={checkActive(Feed.MyFeed)}
-            onClick={() => {
-              if (isLogined) {
-                setActive(Feed.MyFeed);
-              } else {
-                alert("Need to be authorized to unlock this feature");
-              }
+            name={Feed.MyFeed}
+            onClick={(event) => {
+              feedSelectorHandler(event, true);
             }}
           >
             My Feed
-          </div>
-          {selectedTagName ? (
-            <div
+          </button>
+          {selectedPopularTag && (
+            <button
               className={checkActive(Feed.Tag)}
-              onClick={() => {
-                setActive(Feed.Tag);
+              name={Feed.Tag}
+              onClick={(event) => {
+                feedSelectorHandler(event, false);
               }}
             >
               <span># </span>
-              {selectedTagName}
-            </div>
-          ) : null}
+              {selectedPopularTag}
+            </button>
+          )}
         </div>
 
-        {isLoading && <div className={Posts.alerts}>Loading...</div>}
+        {isLoading ||
+          (isUpdating && <div className={Posts.alerts}>Loading...</div>)}
         {isError && <div className={Posts.alerts}>Some Error Ocured</div>}
 
-        {setActiveToRender &&
-          setActiveToRender.articles.map((item: any, index: number) => (
+        {activeToRender &&
+          activeToRender.articles.map((item: any, index: number) => (
             <Post
               author={item.author.username}
               title={item.title}
@@ -166,28 +221,32 @@ export const PostsContainer = () => {
             />
           ))}
 
-        <div>
-          {[...Array(pageCounter)].map((item, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setCurrentPaginationOffset(i * limit);
-                setActivePage(i+1)
-              }}
-            >
-              {i + 1}
-
-              { activePage === (i+1) ? "+" : ""}
-            </button>
-          ))}
-          {isFetchingGlobalFeed && (
-            <div className={Posts.alerts}>Loading...</div>
-          )}
+        <div className={Posts.paginationWrapper}>
+          {pageCounter && !isLoading
+            ? [...Array(pageCounter)].map((item, i) => (
+                <button
+                  className={`${Posts.paginationButton} ${
+                    activePage === i + 1 ? Posts.active : ""
+                  } `}
+                  key={i}
+                  onClick={() => {
+                    setCurrentPaginationOffset(i * limit);
+                    setActivePage(i + 1);
+                  }}
+                >
+                  {i + 1}
+                </button>
+              ))
+            : null}
         </div>
       </div>
 
       <div className={Posts.tags}>
-        <PopularTags />
+        <PopularTags
+          setSelectedPopularTag={setSelectedPopularTag}
+          setActiveFeed={setActiveFeed}
+          setPageCounter={setPageCounter}
+        />
       </div>
     </div>
   );

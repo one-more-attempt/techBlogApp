@@ -36,7 +36,7 @@ export const CommentsBlock = ({
   const userImgUrl = userDataState.imageURL;
 
   const {
-    data: postCommentData,
+    data: postCommentsData,
     error: postCommentError,
     isLoading: postCommentLoading,
     isFetching: isPostsComentsFetching,
@@ -46,14 +46,16 @@ export const CommentsBlock = ({
   });
 
   let commentsOptional;
+  console.log(postCommentsData);
+  
   if (token) {
     commentsOptional = (
       <>
         <AddComment imgURL={userImgUrl} slug={slug} />
         {postCommentLoading && "Loading..."}
         {postCommentError && "Something went wrong..."}
-        {postCommentData &&
-          postCommentData.comments.map((item: any) => (
+        {postCommentsData &&
+          postCommentsData.comments.map((item: any) => (
             <Comment
               date={item.createdAt}
               name={item.author.username}
@@ -74,6 +76,9 @@ export const CommentsBlock = ({
       </div>
     );
   }
+
+  console.log("postCommentData", postCommentsData);
+
   return (
     <div
       className={`${ComntsBlock.adaptiveLayout} ${ComntsBlock.commentBlock}`}

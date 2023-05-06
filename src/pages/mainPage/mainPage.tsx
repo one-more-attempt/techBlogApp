@@ -31,8 +31,7 @@ export const MainPage = () => {
             email: email,
             imageURL: image,
           };
-          dispatch(userSlice.actions.setIsLogined(userDataFromServer));
-          console.log(userInfoData);
+          dispatch(userSliceActions.setIsLogined(userDataFromServer));
         });
     }
   }, []);
