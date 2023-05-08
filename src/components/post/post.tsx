@@ -80,8 +80,7 @@ export const Post = ({
       }
     }
   });
-// console.log('likePostData', likePostData?.article.authorId);
-// console.log('unlikePostData', unlikePostData);
+
   return (
     <div className={PostStyles.postWrapper}>
       <div className={PostStyles.postHeader}>

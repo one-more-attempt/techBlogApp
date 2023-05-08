@@ -24,7 +24,7 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
       author: authorName,
       token: token ? token : "",
     });
-  console.log(authorData);
+ 
   const status = authorData ? authorData.profile.following : false;
   const imgURL = authorData ? authorData.profile.image : "";
 

@@ -32,7 +32,7 @@ export const SelectedPostPage = () => {
             imageURL: image,
           };
           dispatch(userSliceActions.setIsLogined(userDataFromServer));
-          console.log(userInfoData);
+  
         });
     }
   }, []);
@@ -44,7 +44,7 @@ export const SelectedPostPage = () => {
     isFetching: isSelectedPostFetching,
     isLoading,
   } = blogAPI.useGetSelectedPostQuery({ slug: slugName, token });
-  console.log(" selected post", data);
+
 
   const isPostUpdating = isSelectedPostFetching ? true : false;
   return (

@@ -42,7 +42,6 @@ export const RegisterPage = () => {
         setResponseFromServer(
           `${response.data.user.username} successfully registered`
         );
-        console.log(response);
       })
       .catch((error) => {
         let errmessage = "";

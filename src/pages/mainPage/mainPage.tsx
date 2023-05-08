@@ -19,6 +19,7 @@ export const MainPage = () => {
   const dispatch = useAppDispatch();
   const [getUserInfoTrigger, { data: userInfoData, isLoading, error }] =
     blogAPI.useLazyGetUserInfoByTokenQuery();
+
   useEffect(() => {
     if (token) {
       getUserInfoTrigger(token)

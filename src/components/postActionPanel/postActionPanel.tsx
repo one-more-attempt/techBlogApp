@@ -29,7 +29,6 @@ export const PostActionPanel = ({
   date,
   slug,
 }: PostActionPanelProps) => {
-  console.log(author);
 
   const token = localStorageService.getToken();
   const [follow, { data: followData, isLoading: isFollowDataLoading }] =

@@ -71,13 +71,12 @@ export const AuthorPage = () => {
             imageURL: image,
           };
           dispatch(userSlice.actions.setIsLogined(userDataFromServer));
-          console.log(userInfoData);
         });
     }
   }, []);
 
   useEffect(() => {
-    if (postsToRender === authorPosts) {    
+    if (postsToRender === authorPosts) {
       setPageCounter(0);
       getAuthorPostsTrigger({
         author: authorName,
@@ -122,11 +121,6 @@ export const AuthorPage = () => {
         });
     }
   }, [currentPaginationOffset, postsToRender]);
-
-  console.log(authorPosts);
-  console.log(authorLikedPosts);
-  
-
 
   const isPostsUpdating =
     isAuthorPostsFetching || isAuthorLikedPostsFetching ? true : false;

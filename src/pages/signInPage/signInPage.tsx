@@ -20,7 +20,6 @@ export const SignInPage = () => {
 
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const dispatch = useAppDispatch();
-  console.log(userDataState);
   const [errinput, setErrinput] = useState(false);
 
   const [emailInput, setEmailInput] = useState("");
@@ -48,7 +47,6 @@ export const SignInPage = () => {
     await goToLogin(obj)
       .unwrap()
       .then((resp) => {
-        console.log(resp);
         const { username, bio, image, email } = resp.user;
 
         const userData = {
@@ -63,7 +61,6 @@ export const SignInPage = () => {
         navigate("/");
       })
       .catch((e: FetchBaseQueryError) => {
-        console.log(e);
         setErrinput(true);
       });
   };
@@ -101,44 +98,3 @@ export const SignInPage = () => {
     </>
   );
 };
-
-// const tryToLogin = () => {
-//   const userObj = {
-//     user: {
-//       username: userNameInput,
-//       email: emailInput,
-//       password: passwordInput,
-//     },
-//   };
-//   axios
-//     .post(serverURL, userObj)
-//     .then(function (response: any) {
-//       setResponseFromServer(
-//         `${response.data.user.username} successfully registered`
-//       );
-//       console.log(response);
-//     })
-//     .catch((error) => {
-//       let errmessage = "";
-//       for (const [key, value] of Object.entries(error.response.data.errors)) {
-//         errmessage += `${key} ${[value]} / `;
-//       }
-//       if (errmessage) {
-//         setResponseFromServer(errmessage);
-//       }
-//     });
-// };
-
-// axios
-//   .post(serverURL, {
-//     user: {
-//       email: "echo82465@mail.com",
-//       password: "111111",
-//     },
-//   })
-//   .then((resp) => {
-//     console.log(resp.data.user.token);
-//     const userToken = resp.data.user.token;
-//     // localStorage.setItem('items', JSON.stringify(items))
-//     localStorage.setItem (`userToken`, userToken)
-//   })

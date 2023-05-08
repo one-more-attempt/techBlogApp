@@ -13,6 +13,7 @@ import { ErrorNotification } from "../errorNotification/errorNotification";
 import { localStorageService } from "../../services/LSService";
 import { ReactComponent as Spinner } from "../../img/spinner.svg";
 import { getPostsResponse } from "../../types/types";
+import { PaginationButton } from "../paginationButton/PaginationButton";
 
 export enum Feed {
   GlobalFeed = "GLOBAL_FEED",
@@ -24,17 +25,6 @@ export const PostsContainer = () => {
   //login
   const token = localStorageService.getToken() || "";
   const userDataState = useAppSelector(stateSelectors.userSliceData);
-
-  //feed selector
-  const [activeFeed, setActiveFeed] = useState<string>(Feed.GlobalFeed);
-  const [selectedPopularTag, setSelectedPopularTag] = useState("");
-
-  //pagination
-  const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
-  const [pageCounter, setPageCounter] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [activePage, setActivePage] = useState(1);
-  const { isLogined } = userDataState;
 
   //data
   const [
@@ -67,22 +57,35 @@ export const PostsContainer = () => {
     },
   ] = blogAPI.useLazyGetGlobalFeedByTagQuery();
 
-  let activeToRender: getPostsResponse | undefined;
+  //pagination
+  const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
+  const [pageCounter, setPageCounter] = useState<number[]>([0]);
+  const [limit, setLimit] = useState(10);
+  const [activePage, setActivePage] = useState(1);
+  const { isLogined } = userDataState;
 
-  if (activeFeed === Feed.GlobalFeed) {
-    activeToRender = globalFeed;
-  }
-  if (activeFeed === Feed.MyFeed) {
-    console.log(`==`);
+  //feed selector
+  const [activeFeed, setActiveFeed] = useState<string>(Feed.GlobalFeed);
+  const [selectedPopularTag, setSelectedPopularTag] = useState("");
 
-    activeToRender = myFeed;
-  }
-  if (activeFeed === Feed.Tag) {
-    activeToRender = feedByTag;
-  }
+  //render
+  const [activeToRender, setActiveToRender] = useState<
+    getPostsResponse | undefined
+  >();
+
+  const paginationHandler = (data: getPostsResponse) => {
+    const restOfDiv = data.articlesCount % limit;
+    const divResult = Math.ceil(data.articlesCount / limit);
+    const certainDiv = data.articlesCount / limit;
+    restOfDiv > 0
+      ? setPageCounter([...Array(divResult)])
+      : setPageCounter([...Array(certainDiv)]);
+    setActiveToRender(data);
+  };
 
   useEffect(() => {
-    if (activeToRender === globalFeed) {
+    if (activeFeed === Feed.GlobalFeed) {
+      // setActiveToRender(undefined);
       getGlobalFeedTrigger({
         token: "",
         offset: currentPaginationOffset,
@@ -90,16 +93,11 @@ export const PostsContainer = () => {
       })
         .unwrap()
         .then((resp) => {
-          const restOfDiv = resp.articlesCount % limit;
-          const divResult = Math.ceil(resp.articlesCount / limit);
-          const certainDiv = resp.articlesCount / limit;
-          restOfDiv > 0
-            ? setPageCounter(divResult)
-            : setPageCounter(certainDiv);
+          paginationHandler(resp);
         });
     }
-
-    if (activeToRender === myFeed) {
+    if (activeFeed === Feed.MyFeed) {
+      // setActiveToRender(undefined);
       myFeedTrigger({
         token,
         offset: currentPaginationOffset,
@@ -107,15 +105,11 @@ export const PostsContainer = () => {
       })
         .unwrap()
         .then((resp) => {
-          const restOfDiv = resp.articlesCount % limit;
-          const divResult = Math.ceil(resp.articlesCount / limit);
-          const certainDiv = resp.articlesCount / limit;
-          restOfDiv > 0
-            ? setPageCounter(divResult)
-            : setPageCounter(certainDiv);
+          paginationHandler(resp);
         });
     }
-    if (activeToRender === feedByTag) {
+    if (activeFeed === Feed.Tag) {
+      // setActiveToRender(undefined);
       globalFeedByTagTrigger({
         tagname: selectedPopularTag,
         token: token,
@@ -124,15 +118,10 @@ export const PostsContainer = () => {
       })
         .unwrap()
         .then((resp) => {
-          const restOfDiv = resp.articlesCount % limit;
-          const divResult = Math.ceil(resp.articlesCount / limit);
-          const certainDiv = resp.articlesCount / limit;
-          restOfDiv > 0
-            ? setPageCounter(divResult)
-            : setPageCounter(certainDiv);
+          paginationHandler(resp);
         });
     }
-  }, [currentPaginationOffset, activeToRender, selectedPopularTag]);
+  }, [activeFeed, selectedPopularTag, currentPaginationOffset]);
 
   const checkActive = (feed: Feed) => {
     if (activeFeed === feed) return Posts.activeFeed;
@@ -144,9 +133,6 @@ export const PostsContainer = () => {
     isLoadingFeedByTag || isLoadingGlobalFeed || isLoadingMyFeed;
   const isError = isErrorByTag || isErrorGlobalFeed || isErrorMyFeed;
 
-  console.log(activeToRender);
-  // console.log(pageCounter);
-
   const feedSelectorHandler = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     isNeedToCheckAuthStatus: boolean
@@ -154,15 +140,17 @@ export const PostsContainer = () => {
     if (isNeedToCheckAuthStatus) {
       if (isLogined) {
         setActiveFeed(Feed.MyFeed);
-        setPageCounter(0);
+        setPageCounter([...Array(0)]);
       } else {
         alert("Need to be authorized to unlock this feature");
       }
     } else {
       setActiveFeed(event.currentTarget.name);
-      setPageCounter(0);
+      setPageCounter([...Array(0)]);
     }
   };
+
+  // console.log(pageCounter);
 
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
@@ -222,22 +210,19 @@ export const PostsContainer = () => {
           ))}
 
         <div className={Posts.paginationWrapper}>
-          {pageCounter && !isLoading
-            ? [...Array(pageCounter)].map((item, i) => (
-                <button
-                  className={`${Posts.paginationButton} ${
-                    activePage === i + 1 ? Posts.active : ""
-                  } `}
-                  key={i}
-                  onClick={() => {
-                    setCurrentPaginationOffset(i * limit);
-                    setActivePage(i + 1);
-                  }}
-                >
-                  {i + 1}
-                </button>
-              ))
-            : null}
+          {pageCounter &&
+            pageCounter.map((item, i) => (
+              <PaginationButton
+                isActive={activePage === i + 1}
+                isLoading={false}
+                num={i + 1}
+                key={i}
+                onClick={() => {
+                  setCurrentPaginationOffset(i * limit);
+                  setActivePage(i + 1);
+                }}
+              />
+            ))}
         </div>
       </div>
 

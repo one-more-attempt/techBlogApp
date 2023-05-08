@@ -26,14 +26,14 @@ export const AddComment = ({ imgURL, slug }: AddCommentProps) => {
     };
     addCommentToPost({ token, slug, comment: commentBody });
     setText("");
-    console.log(`works`);
+    
   };
 
   useEffect(() => {
     text.length > 5 ? setButtonStatus(false) : setButtonStatus(true);
   });
 
-  console.log('addCommentToPostData', addCommentToPostData);
+
   
   return (
     <div className={`${NewComment.addCommentWrapper} `}>

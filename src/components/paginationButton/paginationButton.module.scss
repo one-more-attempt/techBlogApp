@@ -1,0 +1,33 @@
+@import '../../styles/colors.scss';
+
+.paginationButton {
+    background-color: $main-green;
+    background-color: $white;
+    cursor: pointer;
+    padding: 0.5rem;
+    border: 1px solid $grey-40;
+    display: inline-flex;
+    gap: 0.25rem;
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    &:first-child {
+        border-bottom-left-radius: 0.25rem;
+        border-top-left-radius: 0.25rem;
+    }
+
+    &:last-child {
+        border-bottom-right-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+    }
+}
+
+.active {
+    background-color: $main-green;
+    color: white;
+    border-color: $main-green ;
+
+}

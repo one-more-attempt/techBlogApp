@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { blogAPI } from "../../api/blogAPI";
 import { stateSelectors } from "../../store";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
@@ -8,7 +9,7 @@ import PopTags from "./popularTags.module.scss";
 type PopularTagsProps = {
   setSelectedPopularTag: (arg: string) => void;
   setActiveFeed: (arg: Feed) => void;
-  setPageCounter: (arg: number) => void;
+  setPageCounter: Dispatch<SetStateAction<number[]>>;
 };
 
 export const PopularTags = ({
@@ -18,7 +19,6 @@ export const PopularTags = ({
 }: PopularTagsProps) => {
   const { data, error, isLoading, isSuccess } =
     blogAPI.useGetPopularTagsQuery(true);
-  console.log(data);
 
   return (
     <div className={PopTags.tagsWrapper}>
@@ -33,7 +33,7 @@ export const PopularTags = ({
               onClick={() => {
                 setSelectedPopularTag(item);
                 setActiveFeed(Feed.Tag);
-                setPageCounter(0);
+                setPageCounter([...Array(0)]);
               }}
             >
               {item}
