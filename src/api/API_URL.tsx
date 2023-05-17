@@ -1,6 +1,7 @@
 export const API_URL = {
   BASE_URL: `https://conduit.productionready.io/api`,
   LOGIN: `/users/login`,
+  REGISTER: `/users`,
   USER_INFO: `/user`,
   POPULAR_TAGS: "/tags",
 
@@ -22,7 +23,6 @@ export const API_URL = {
   LIKE_POST: (slug: string) => `/articles/${slug}/favorite`,
   FOLLOW_USER: (user: string) => `/profiles/${user}/follow`,
   COMMENT_TO_POST: (slug: string) => `articles/${slug}/comments`,
-  
+
   GET_AUTHOR_INFO: (user: string) => `/profiles/${user}`,
-  
 };

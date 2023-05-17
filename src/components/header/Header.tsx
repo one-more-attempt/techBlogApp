@@ -35,8 +35,10 @@ export const Header = () => {
           <span>New article</span>
         </div>
         <div className={HeaderStyle.link}>
-          <SettingsIcon />
-          <span>Settings</span>
+          <Link to={ROUTE_PATH.SETTINGS} className={HeaderStyle.link}>
+            <SettingsIcon />
+            <span>Settings</span>
+          </Link>
         </div>
         <div className={HeaderStyle.link}>
           <img src={userAvatar} alt="" />
@@ -59,7 +61,7 @@ export const Header = () => {
           Sign in
         </Link>
 
-        <Link to={ROUTE_PATH.SIGN_IN} className={HeaderStyle.link}>
+        <Link to={ROUTE_PATH.SIGN_UP} className={HeaderStyle.link}>
           Sign up
         </Link>
       </>

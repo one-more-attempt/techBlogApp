@@ -5,13 +5,15 @@ import { InputTypes, SimpleInput } from "../../components/inputs/simpleInput";
 import { SimpleButton } from "../../components/buttons/simpleTextButton/simpleTextButton";
 import SignIn from "./signInPage.module.scss";
 import { blogAPI } from "../../api/blogAPI";
-import { loginInput, loginResponse } from "../../types/types";
+import { LoginInput, LoginResponse } from "../../types/types";
 import { ErrorNotification } from "../../components/errorNotification/errorNotification";
 import { userSlice } from "../../store/slices/userSlice";
 import { stateSelectors } from "../../store";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { ROUTE_PATH } from "../../routes/routePathes";
+import { localStorageService } from "../../services/LSService";
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -55,8 +57,9 @@ export const SignInPage = () => {
           imageURL: image,
           email: email,
         };
+
         const token = resp.user.token;
-        localStorage.setItem(`userToken`, token);
+        localStorageService.setToken(token);
         dispatch(userSlice.actions.setIsLogined(userData));
         navigate("/");
       })
@@ -71,9 +74,16 @@ export const SignInPage = () => {
       <div className={`content ${SignIn.signInBlock} ${SignIn.adaptiveLayout}`}>
         <div className={SignIn.formContainer}>
           <p className={SignIn.signIn}>Sign In</p>
-          <p className={SignIn.dontHave}> Don't have an account?</p>
+          <p className={SignIn.dontHave}>
+            <Link to={ROUTE_PATH.SIGN_UP}>Don't have an account?</Link>
+          </p>
           {errinput ? (
-            <ErrorNotification status={true} text="Something is incorrect" />
+            <ErrorNotification
+              data={{
+                status: true,
+                text: "Something is incorrect",
+              }}
+            />
           ) : null}
           <SimpleInput
             type={InputTypes.Text}

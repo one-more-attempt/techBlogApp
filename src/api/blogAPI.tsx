@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { API_URL } from "./API_URL";
 import type {
-  loginInput,
-  loginResponse,
+  LoginInput,
+  LoginResponse,
   AuthorInfoResponse,
   FollowUnfollowAuthorInput,
   LikeUnlikePostInput,
@@ -19,6 +19,8 @@ import type {
   getSelectedPostInput,
   getSelectedPostResponse,
   getAllPopularTagsResponse,
+  SignUpResponse,
+  SignUpInput,
 } from "../types/types";
 
 export const blogAPI = createApi({
@@ -26,7 +28,24 @@ export const blogAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${API_URL.BASE_URL}` }),
   tagTypes: ["post", "authorInfo", "selectedPost", "comments"],
   endpoints: (build) => ({
-    login: build.mutation<loginResponse, loginInput>({
+    register: build.mutation<SignUpResponse, SignUpInput>({
+      query: (signUpInputData) => ({
+        url: `${API_URL.REGISTER}`,
+        method: "POST",
+        body: signUpInputData,
+      }),
+    }),
+
+    updateProfile: build.mutation<any, any>({
+      query: ({updateData, token}) => ({
+        url: `${API_URL.USER_INFO}`,
+        method: "PUT",
+        body: updateData,
+        headers: { authorization: `Token ${token}` },
+      }),
+    }),
+
+    login: build.mutation<LoginResponse, LoginInput>({
       query: (loginObj) => ({
         url: `${API_URL.LOGIN}`,
         method: "POST",
@@ -95,7 +114,7 @@ export const blogAPI = createApi({
       }
     ),
 
-    getUserInfoByToken: build.query<loginResponse, string>({
+    getUserInfoByToken: build.query<LoginResponse, string>({
       query: (token) => ({
         url: `${API_URL.USER_INFO}`,
         headers: { authorization: `Token ${token}` },

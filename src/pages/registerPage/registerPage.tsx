@@ -1,95 +1,125 @@
-import axios from "axios";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import "./registerPage.scss";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { blogAPI } from "../../api/blogAPI";
+import { SimpleButton } from "../../components/buttons/simpleTextButton/simpleTextButton";
+import { ErrorNotification } from "../../components/errorNotification/errorNotification";
+import { Footer } from "../../components/footer/Footer";
+import { Header } from "../../components/header/Header";
+import { InputTypes, SimpleInput } from "../../components/inputs/simpleInput";
+import { ROUTE_PATH } from "../../routes/routePathes";
+import { stateSelectors } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
+import { userSlice, userSliceActions } from "../../store/slices/userSlice";
+import { SignUpResponse } from "../../types/types";
+import SignUp from "./signUpPage.module.scss";
 
-// error?
-// response=> data => errors
-// email:['has already been taken']
-// username : ['has already been taken']
+export const SignUpPage = () => {
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-// success!
-// "user": {
-//   "email": "jake@jake.jake",
-//   "token": "jwt.token.here",
-//   "username": "jake",
-//   "bio": "I work at State Farm.",
-//   "image": null
-// }
-
-const serverURL = "https://conduit.productionready.io/api/users";
-
-export const RegisterPage = () => {
+  const [goToSignUp, { error, isError, isLoading, data }] =
+    blogAPI.useRegisterMutation();
   const [emailInput, setEmailInput] = useState("");
+  const [nickNameInput, setNickNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  const [userNameInput, setUserName] = useState("");
-  const [responseFromServer, setResponseFromServer] = useState("");
+  const [buttonStatus, setButtonStatus] = useState(true);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const [errorNotificationData, setErrorNotificationData] = useState({
+    text: "",
+    status: false,
+  });
+
+  //not emty check
+  useEffect(() => {
+    if (emailInput.length > 5 && passwordInput.length > 5) {
+      if (buttonStatus !== false) {
+        setButtonStatus(false);
+      }
+    }
+  });
+
+  type ErrorData = {
+    errors: {
+      email: string[];
+      username: string[];
+      password: string[];
+    };
+  };
 
   const tryToRegister = () => {
-    const userObj = {
+    const userData = {
       user: {
-        username: userNameInput,
         email: emailInput,
+        username: nickNameInput,
         password: passwordInput,
       },
     };
-    axios
-      .post(serverURL, userObj)
-      .then(function (response: any) {
-        setResponseFromServer(
-          `${response.data.user.username} successfully registered`
-        );
+
+    goToSignUp(userData)
+      .unwrap()
+      .then((data: SignUpResponse) => {
+        console.log(data);
+        const { username, bio, image, email } = data.user;
+        const userData = {
+          name: username,
+          bio: bio,
+          imageURL: image,
+          email: email,
+        };
+        const token = data.user.token;
+        localStorage.setItem(`userToken`, token);
+        dispatch(userSliceActions.setIsLogined(userData));
+        navigate("/");
       })
-      .catch((error) => {
-        let errmessage = "";
-        for (const [key, value] of Object.entries(error.response.data.errors)) {
-          errmessage += `${key} ${[value]} / `;
-        }
-        if (errmessage) {
-          setResponseFromServer(errmessage);
-        }
+      .catch((e: FetchBaseQueryError) => {
+        //error handling
+        console.log(e.data);
+        setInvalidCredentials(true);
       });
   };
 
   return (
-    <div className="mainRegBlock">
-      <h1>
-        <Link to="/">{`Main page`}</Link>
-      </h1>
-      <TextField
-        id="outlined-basic"
-        label="User name"
-        variant="outlined"
-        value={userNameInput}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setUserName(e.target.value);
-        }}
-      />
-      <TextField
-        id="outlined-basic"
-        label="Email"
-        variant="outlined"
-        value={emailInput}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setEmailInput(e.target.value);
-        }}
-      />
-      <TextField
-        id="outlined-basic"
-        label="Password"
-        variant="outlined"
-        value={passwordInput}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setPasswordInput(e.target.value);
-        }}
-      />
-      <div>{responseFromServer ? responseFromServer : null}</div>
-      <Button variant="outlined" onClick={tryToRegister}>
-        Outlined
-      </Button>
-    </div>
+    <>
+      <Header />
+      <div className={`content ${SignUp.signUpBlock} ${SignUp.adaptiveLayout}`}>
+        <div className={SignUp.formContainer}>
+          <p className={SignUp.signUp}>Sign Up</p>
+          <p className={SignUp.dontHave}>
+            <Link to={ROUTE_PATH.SIGN_IN}> Already have an account?</Link>
+          </p>
+
+          {invalidCredentials ? (
+            <ErrorNotification data={errorNotificationData} />
+          ) : null}
+
+          <SimpleInput
+            type={InputTypes.Text}
+            placeholder={"Nickname"}
+            value={nickNameInput}
+            setValue={setNickNameInput}
+          />
+          <SimpleInput
+            type={InputTypes.Text}
+            placeholder={"Email"}
+            value={emailInput}
+            setValue={setEmailInput}
+          />
+          <SimpleInput
+            type={InputTypes.Password}
+            placeholder={"Password"}
+            value={passwordInput}
+            setValue={setPasswordInput}
+          />
+          <SimpleButton
+            disabled={buttonStatus}
+            text="Sign In"
+            onClickFunc={() => tryToRegister()}
+          />
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 };

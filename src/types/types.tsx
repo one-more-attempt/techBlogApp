@@ -1,8 +1,8 @@
-export type loginInput = {
+export type LoginInput = {
   user: { email: string; password: string };
 };
 
-export type loginResponse = {
+export type LoginResponse = {
   user: {
     email: string;
     username: string;
@@ -11,6 +11,16 @@ export type loginResponse = {
     token: string;
   };
 };
+
+export type SignUpInput = {
+  user: {
+    email: string;
+    username: string;
+    password: string;
+  };
+};
+
+export type SignUpResponse = LoginResponse;
 
 export type AuthorInfo = {
   username: string;

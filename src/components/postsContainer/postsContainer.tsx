@@ -85,7 +85,6 @@ export const PostsContainer = () => {
 
   useEffect(() => {
     if (activeFeed === Feed.GlobalFeed) {
-      // setActiveToRender(undefined);
       getGlobalFeedTrigger({
         token: "",
         offset: currentPaginationOffset,
@@ -97,7 +96,6 @@ export const PostsContainer = () => {
         });
     }
     if (activeFeed === Feed.MyFeed) {
-      // setActiveToRender(undefined);
       myFeedTrigger({
         token,
         offset: currentPaginationOffset,
@@ -109,7 +107,6 @@ export const PostsContainer = () => {
         });
     }
     if (activeFeed === Feed.Tag) {
-      // setActiveToRender(undefined);
       globalFeedByTagTrigger({
         tagname: selectedPopularTag,
         token: token,
@@ -150,8 +147,6 @@ export const PostsContainer = () => {
     }
   };
 
-  // console.log(pageCounter);
-
   return (
     <div className={`${Posts.adaptiveLayout} ${Posts.postsContainer}`}>
       <div className={Posts.posts}>
@@ -188,8 +183,9 @@ export const PostsContainer = () => {
           )}
         </div>
 
-        {isLoading ||
-          (isUpdating && <div className={Posts.alerts}>Loading...</div>)}
+        {(isLoading || isUpdating) && (
+          <div className={Posts.alerts}>Loading...</div>
+        )}
         {isError && <div className={Posts.alerts}>Some Error Ocured</div>}
 
         {activeToRender &&
@@ -210,11 +206,10 @@ export const PostsContainer = () => {
           ))}
 
         <div className={Posts.paginationWrapper}>
-          {pageCounter &&
+          {pageCounter.length > 1 &&
             pageCounter.map((item, i) => (
               <PaginationButton
                 isActive={activePage === i + 1}
-                isLoading={false}
                 num={i + 1}
                 key={i}
                 onClick={() => {

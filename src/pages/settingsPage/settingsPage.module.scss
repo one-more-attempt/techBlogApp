@@ -1,7 +1,7 @@
 @import '../../styles/colors.scss';
 @import '../../styles/global/layout.scss';
 
-.signInBlock {
+.settingsBlock {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,25 +18,36 @@
         font-size: 1.2rem;
         border-radius: 0.3rem;
     }
+
+    .bio {
+        display: block;
+        width: 100%;
+        resize: vertical;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        color: $input-text;
+        border-radius: 0.3rem;
+        border: 1px solid rgba(0, 0, 0, .15);
+        color: $input-text;
+
+        &:focus {
+            border-color: $input-border-focus;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $grey-10;
+
+        }
+    }
 }
 
-.signIn {
+.settings {
     color: $title-grey;
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     font-family: inherit;
     font-weight: 500;
     line-height: 1.1;
     font-size: 2.5rem;
-}
-
-.dontHave {
-    color: $main-green;
-    text-align: center;
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }

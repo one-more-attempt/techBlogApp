@@ -1,4 +1,5 @@
 import Input from "./input.module.scss";
+
 export enum InputTypes {
   Password = "password",
   Text = "text",

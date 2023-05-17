@@ -5,7 +5,10 @@ export const PageNotFound = () => {
     <div>
       <h1>
         Sorry, page this page is doesn't exist
-        <Link to="/">Go to MAIN </Link>
+        <p>
+          {" "}
+          <Link to="/">Go to MAIN </Link>
+        </p>
       </h1>
     </div>
   );
