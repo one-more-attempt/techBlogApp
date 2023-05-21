@@ -5,9 +5,8 @@ export const ROUTE_PATH = {
   POST: `/post`,
   SETTINGS: `/settings`,
   SELECTED_POST_DYNAMIC: (title: string) => `/post/${title}`,
-  PROFILE: "/profile",
+  PROFILE: "/profile/:author",
   PROFILE_DYNAMIC: (username: string) => `/profile/${username}`,
-  NEW_POST: `/new-post`,
-  USER_PROFILE: `/profile/:userName`,
+  NEW_ARTICLE: `/editor`,
   NOT_FOUND: `*`,
 };

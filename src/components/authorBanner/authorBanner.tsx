@@ -12,6 +12,8 @@ type AuthorBannerProps = {
 };
 
 export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const userName = userDataState.userName;
   const token = localStorageService.getToken();
   const [isLoading, setIsLoading] = useState(false);
   const [follow, { data: followData, isLoading: isFollowLoading }] =
@@ -24,9 +26,11 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
       author: authorName,
       token: token ? token : "",
     });
- 
+
   const status = authorData ? authorData.profile.following : false;
   const imgURL = authorData ? authorData.profile.image : "";
+  const author = authorData ? authorData.profile.username : "";
+  const bio = authorData ? authorData.profile.bio : "";
 
   useEffect(() => {
     if (isFollowLoading || isUnfollowLoading || isAuthorDataLoading) {
@@ -56,6 +60,18 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
     }
   };
 
+  console.log(authorData);
+  const buttonSelector =
+    author !== userName ? (
+      <FollowButton
+        darkMode={false}
+        isFollow={status}
+        author={authorName}
+        followHandler={followHandler}
+        isDisabled={false}
+        isLoading={isLoading}
+      />
+    ) : null;
   return (
     <>
       {/* <ModalWindow /> */}
@@ -65,16 +81,8 @@ export const AuthorBanner = ({ authorName }: AuthorBannerProps) => {
             <img src={imgURL} alt="" />
           </div>
           <span className={Banner.authorName}>{authorName}</span>
-          <div className={Banner.btn}>
-            <FollowButton
-              darkMode={false}
-              isFollow={status}
-              author={authorName}
-              followHandler={followHandler}
-              isDisabled={false}
-              isLoading={isLoading}
-            />
-          </div>
+          <span className={Banner.authorBio}>{bio}</span>
+          <div className={Banner.btn}>{buttonSelector}</div>
         </div>
       </div>
     </>

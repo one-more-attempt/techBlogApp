@@ -150,7 +150,7 @@ export const AuthorPage = () => {
           </div>
 
           {isLoading && "loading"}
-          {isError && "some error ocured"}
+          {isError && "some error occured"}
 
           {postsToRender &&
             postsToRender.articles.map((item: any, index: number) => (

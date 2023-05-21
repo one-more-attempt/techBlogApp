@@ -71,7 +71,7 @@ export const SignUpPage = () => {
         const token = data.user.token;
         localStorage.setItem(`userToken`, token);
         dispatch(userSliceActions.setIsLogined(userData));
-        navigate("/");
+        navigate(ROUTE_PATH.MAIN);
       })
       .catch((e: FetchBaseQueryError) => {
         //error handling

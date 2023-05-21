@@ -86,7 +86,7 @@ export const PostsContainer = () => {
   useEffect(() => {
     if (activeFeed === Feed.GlobalFeed) {
       getGlobalFeedTrigger({
-        token: "",
+        token,
         offset: currentPaginationOffset,
         limit,
       })

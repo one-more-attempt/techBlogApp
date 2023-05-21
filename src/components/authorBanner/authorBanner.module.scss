@@ -34,14 +34,16 @@
             margin-bottom: 1rem;
         }
 
+        .authorBio {
+            color: $grey-20;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
         .btn {
             width: 100%;
             display: flex;
             justify-content: flex-end;
-            // align-items: center;
-
-           
-
         }
 
     }

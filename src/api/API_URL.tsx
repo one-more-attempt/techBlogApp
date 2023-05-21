@@ -4,6 +4,7 @@ export const API_URL = {
   REGISTER: `/users`,
   USER_INFO: `/user`,
   POPULAR_TAGS: "/tags",
+  POST_NEW_ARTICLE: `/articles`,
 
   GLOBAL_POSTS: (offset: number, limit: number) =>
     `/articles?limit=${limit}&offset=${offset}`,

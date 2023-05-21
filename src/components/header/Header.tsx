@@ -8,7 +8,7 @@ import { stateSelectors } from "../../store";
 import { Link, useNavigate } from "react-router-dom";
 import { localStorageService } from "../../services/LSService";
 import { ROUTE_PATH } from "../../routes/routePathes";
-import { userSlice } from "../../store/slices/userSlice";
+import { userSlice, userSliceActions } from "../../store/slices/userSlice";
 
 export const Header = () => {
   const userDataState = useAppSelector(stateSelectors.userSliceData);
@@ -17,7 +17,7 @@ export const Header = () => {
   let links: JSX.Element;
   const goToLogout = () => {
     localStorageService.removetoken();
-    dispatch(userSlice.actions.setInitial());
+    dispatch(userSliceActions.setInitial());
 
     navigate(ROUTE_PATH.MAIN);
   };
@@ -31,8 +31,10 @@ export const Header = () => {
           Home
         </Link>
         <div className={HeaderStyle.link}>
-          <ArticleIcon />
-          <span>New article</span>
+          <Link to={ROUTE_PATH.NEW_ARTICLE} className={HeaderStyle.link}>
+            <ArticleIcon />
+            <span>New article</span>
+          </Link>
         </div>
         <div className={HeaderStyle.link}>
           <Link to={ROUTE_PATH.SETTINGS} className={HeaderStyle.link}>
@@ -41,9 +43,15 @@ export const Header = () => {
           </Link>
         </div>
         <div className={HeaderStyle.link}>
-          <img src={userAvatar} alt="" />
-          <span>{userDataState.userName}</span>
+          <Link
+            to={ROUTE_PATH.PROFILE_DYNAMIC(userDataState.userName)}
+            className={HeaderStyle.link}
+          >
+            <img src={userAvatar} alt="" />
+            <span>{userDataState.userName}</span>
+          </Link>
         </div>
+
         <div className={HeaderStyle.link} onClick={goToLogout}>
           <LogoutIcon />
           <span>logout</span>

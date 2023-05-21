@@ -37,7 +37,7 @@ export const blogAPI = createApi({
     }),
 
     updateProfile: build.mutation<any, any>({
-      query: ({updateData, token}) => ({
+      query: ({ updateData, token }) => ({
         url: `${API_URL.USER_INFO}`,
         method: "PUT",
         body: updateData,
@@ -50,6 +50,15 @@ export const blogAPI = createApi({
         url: `${API_URL.LOGIN}`,
         method: "POST",
         body: loginObj,
+      }),
+    }),
+
+    newPost: build.mutation<any, any>({
+      query: ({ postData, token }) => ({
+        url: `${API_URL.POST_NEW_ARTICLE}`,
+        method: "POST",
+        body: postData,
+        headers: { authorization: `Token ${token}` },
       }),
     }),
 
@@ -186,5 +195,13 @@ export const blogAPI = createApi({
         providesTags: (result) => ["selectedPost"],
       }
     ),
+
+    deleteSelectedPost: build.mutation<any, any>({
+      query: ({ slug, token }) => ({
+        url: `${API_URL.POST_BY_SLUG(slug)}`,
+        headers: { authorization: `Token ${token}` },
+        method: "DELETE",
+      }),
+    }),
   }),
 });

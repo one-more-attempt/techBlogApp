@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { blogAPI } from "../../api/blogAPI";
+import { ROUTE_PATH } from "../../routes/routePathes";
 import { localStorageService } from "../../services/LSService";
+import { stateSelectors } from "../../store";
+import { useAppSelector } from "../../store/hooks/redux-hooks";
+import { DeletePostButton } from "../buttons/deleteButton/deleteButton";
+import { EditPostButton } from "../buttons/editButton/editButton";
 import { FollowButton } from "../buttons/followButton/followButton";
 import { LikePostButton } from "../buttons/likePostButton/likePostButton";
 import { PostUserInfo } from "../postInfo/PostUserInfo";
@@ -29,8 +35,11 @@ export const PostActionPanel = ({
   date,
   slug,
 }: PostActionPanelProps) => {
-
+  const navigate = useNavigate();
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const userName = userDataState.userName;
   const token = localStorageService.getToken();
+
   const [follow, { data: followData, isLoading: isFollowDataLoading }] =
     blogAPI.useFollowAuthorMutation();
   const [unFollow, { data: unFollowData, isLoading: isUnfollowDataLoading }] =
@@ -39,6 +48,9 @@ export const PostActionPanel = ({
     blogAPI.useLikePostMutation();
   const [unLikePost, { data: unlikePostData, isLoading: isUnlikePostLoading }] =
     blogAPI.useUnlikePostMutation();
+
+  const [deletePost, { data: deletePostData, isLoading: deletePostIsLoading, isError }] =
+    blogAPI.useDeleteSelectedPostMutation();
 
   const followHandler = () => {
     if (token) {
@@ -76,6 +88,16 @@ export const PostActionPanel = ({
     }
   };
 
+  const deletePostHandler = () => {
+    deletePost({ token, slug })
+      .unwrap()
+      .then((res) => navigate(ROUTE_PATH.MAIN))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 
@@ -98,15 +120,9 @@ export const PostActionPanel = ({
     }
   });
 
-  return (
-    <>
-      <div className={PostActPanel.actionPanelWrapper}>
-        <PostUserInfo
-          darkMode={darkMode}
-          author={author}
-          createdAt={date}
-          imgURL={imgURL}
-        />
+  const activeButtons =
+    author !== userName ? (
+      <>
         <FollowButton
           darkMode={darkMode}
           isFollow={following}
@@ -121,6 +137,23 @@ export const PostActionPanel = ({
           isLoading={isLikeLoading}
           likeHandler={likeHandler}
         />
+      </>
+    ) : (
+      <>
+        <DeletePostButton darkMode={darkMode} onClick={deletePostHandler} />
+        <EditPostButton darkMode={darkMode} onClick={() => {}} />
+      </>
+    );
+  return (
+    <>
+      <div className={PostActPanel.actionPanelWrapper}>
+        <PostUserInfo
+          darkMode={darkMode}
+          author={author}
+          createdAt={date}
+          imgURL={imgURL}
+        />
+        {activeButtons}
       </div>
     </>
   );
