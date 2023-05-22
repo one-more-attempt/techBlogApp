@@ -9,6 +9,7 @@ import { localStorageService } from "../../services/LSService";
 import { useAppDispatch } from "../../store/hooks/redux-hooks";
 import { userSlice } from "../../store/slices/userSlice";
 import Author from "./authorPage.module.scss";
+import { PaginationButton } from "../../components/paginationButton/PaginationButton";
 
 enum FeedSelector {
   Author,
@@ -25,7 +26,7 @@ export const AuthorPage = () => {
 
   //pagination
   const [currentPaginationOffset, setCurrentPaginationOffset] = useState(0);
-  const [pageCounter, setPageCounter] = useState(0);
+  const [pageCounter, setPageCounter] = useState<number[]>([0]);
   const [limit, setLimit] = useState(10);
   const [activePage, setActivePage] = useState(1);
 
@@ -77,7 +78,7 @@ export const AuthorPage = () => {
 
   useEffect(() => {
     if (postsToRender === authorPosts) {
-      setPageCounter(0);
+      // setPageCounter([0]);
       getAuthorPostsTrigger({
         author: authorName,
         token: token,
@@ -91,15 +92,15 @@ export const AuthorPage = () => {
             const divResult = Math.ceil(resp.articlesCount / limit);
             const certainDiv = resp.articleCount / limit;
             restOfDiv > 0
-              ? setPageCounter(divResult)
-              : setPageCounter(certainDiv);
+              ? setPageCounter([...Array(divResult)])
+              : setPageCounter([...Array(certainDiv)]);
           } else {
-            setPageCounter(0);
+            setPageCounter([0]);
           }
         });
     }
     if (postsToRender === authorLikedPosts) {
-      setPageCounter(0);
+      // setPageCounter([0]);
       getAuthorFavouritePostsQuery({
         author: authorName,
         token: token,
@@ -113,10 +114,10 @@ export const AuthorPage = () => {
             const divResult = Math.ceil(resp.articlesCount / limit);
             const certainDiv = resp.articleCount / limit;
             restOfDiv > 0
-              ? setPageCounter(divResult)
-              : setPageCounter(certainDiv);
+              ? setPageCounter([...Array(divResult)])
+              : setPageCounter([...Array(certainDiv)]);
           } else {
-            setPageCounter(0);
+            setPageCounter([0]);
           }
         });
     }
@@ -170,22 +171,18 @@ export const AuthorPage = () => {
             ))}
 
           <div className={Author.paginationWrapper}>
-            {pageCounter
-              ? [...Array(pageCounter)].map((item, i) => (
-                  <button
-                    className={`${Author.paginationButton} ${
-                      activePage === i + 1 ? Author.active : ""
-                    } `}
-                    key={i}
-                    onClick={() => {
-                      setCurrentPaginationOffset(i * limit);
-                      setActivePage(i + 1);
-                    }}
-                  >
-                    {i + 1}
-                  </button>
-                ))
-              : null}
+            {pageCounter.length > 1 &&
+              pageCounter.map((item, i) => (
+                <PaginationButton
+                  isActive={activePage === i + 1}
+                  num={i + 1}
+                  key={i}
+                  onClick={() => {
+                    setCurrentPaginationOffset(i * limit);
+                    setActivePage(i + 1);
+                  }}
+                />
+              ))}
           </div>
         </div>
       </div>
