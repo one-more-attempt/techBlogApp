@@ -38,7 +38,7 @@ export const PostActionPanel = ({
   const navigate = useNavigate();
   const userDataState = useAppSelector(stateSelectors.userSliceData);
   const userName = userDataState.userName;
-  const token = localStorageService.getToken();
+  const token = localStorageService.getToken() || '';
 
   const [follow, { data: followData, isLoading: isFollowDataLoading }] =
     blogAPI.useFollowAuthorMutation();
@@ -56,12 +56,12 @@ export const PostActionPanel = ({
     if (token) {
       if (following) {
         unFollow({
-          token: token ? token : "",
+          token: token ,
           author: author,
         });
       } else {
         follow({
-          token: token ? token : "",
+          token: token,
           author: author,
         });
       }
@@ -97,7 +97,7 @@ export const PostActionPanel = ({
       });
   };
 
-  
+
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 

@@ -29,10 +29,12 @@ export const ArticleBanner = ({
   isPostUpdating,
   slug,
 }: ArticleBannerProps) => {
+  const limitedTitle =
+    title.length > 200 ? title.slice(0, 200).concat("...") : title;
   return (
     <div className={`${ArtBanner.articleBannerWrapper}`}>
       <div className={`${ArtBanner.container} ${ArtBanner.adaptiveLayout}`}>
-        <h1>{title}</h1>
+        <h1>{limitedTitle}</h1>
         <PostActionPanel
           author={author}
           date={date}

@@ -53,15 +53,6 @@ export const blogAPI = createApi({
       }),
     }),
 
-    newPost: build.mutation<any, any>({
-      query: ({ postData, token }) => ({
-        url: `${API_URL.POST_NEW_ARTICLE}`,
-        method: "POST",
-        body: postData,
-        headers: { authorization: `Token ${token}` },
-      }),
-    }),
-
     followAuthor: build.mutation<AuthorInfoResponse, FollowUnfollowAuthorInput>(
       {
         query: ({ token, author }) => ({
@@ -196,11 +187,32 @@ export const blogAPI = createApi({
       }
     ),
 
-    deleteSelectedPost: build.mutation<any, any>({
+    newPost: build.mutation<any, any>({
+      query: ({ postData, token }) => ({
+        url: `${API_URL.POST_NEW_ARTICLE}`,
+        method: "POST",
+        body: postData,
+        headers: { authorization: `Token ${token}` },
+      }),
+    }),
+
+    deleteSelectedPost: build.mutation<
+      getSelectedPostResponse,
+      getSelectedPostInput
+    >({
       query: ({ slug, token }) => ({
         url: `${API_URL.POST_BY_SLUG(slug)}`,
         headers: { authorization: `Token ${token}` },
         method: "DELETE",
+      }),
+    }),
+
+    updateSelectedPost: build.mutation<getSelectedPostResponse, any>({
+      query: ({ slug, postData, token }) => ({
+        url: `${API_URL.POST_BY_SLUG(slug)}`,
+        headers: { authorization: `Token ${token}` },
+        method: "PUT",
+        body: postData,
       }),
     }),
   }),

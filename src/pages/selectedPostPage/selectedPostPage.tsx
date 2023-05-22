@@ -32,7 +32,6 @@ export const SelectedPostPage = () => {
             imageURL: image,
           };
           dispatch(userSliceActions.setIsLogined(userDataFromServer));
-  
         });
     }
   }, []);
@@ -44,7 +43,6 @@ export const SelectedPostPage = () => {
     isFetching: isSelectedPostFetching,
     isLoading,
   } = blogAPI.useGetSelectedPostQuery({ slug: slugName, token });
-
 
   const isPostUpdating = isSelectedPostFetching ? true : false;
   return (

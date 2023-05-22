@@ -23,7 +23,7 @@ export const NewArticlePage = () => {
   let LSToken = localStorageService.getToken() || "";
 
   //editMode
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(!!slugName);
 
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
@@ -41,8 +41,25 @@ export const NewArticlePage = () => {
   const [getSelectedPostTrigger, { data }] =
     blogAPI.useLazyGetSelectedPostQuery();
 
+  //update
+  const [
+    updateSelectedPost,
+    { data: updatePostData, isLoading: updatePostIsLoading },
+  ] = blogAPI.useUpdateSelectedPostMutation();
+
   const getSelectedPostHandler = () => {
-    getSelectedPostTrigger({ slug: slugName, token: LSToken });
+    if (slugName) {
+      setEditMode(true);
+      getSelectedPostTrigger({ slug: slugName, token: LSToken })
+        .unwrap()
+        .then((resp) => {
+          const { title, slug, description, body, tagList } = resp.article;
+          setTitleInput(title);
+          setDescriptionInput(description);
+          setBodyText(body);
+          setTags(tagList.join(", "));
+        });
+    }
   };
 
   const getUserInfo = () => {
@@ -65,7 +82,7 @@ export const NewArticlePage = () => {
         });
     }
   };
-  const goToPostNewArticle = () => {
+  const postActionHandler = () => {
     const postData = {
       article: {
         title: titleInput,
@@ -74,18 +91,28 @@ export const NewArticlePage = () => {
         tagList: tags.split(/\s*,\s*/),
       },
     };
-    console.log(postData.article.tagList);
-    postNewArticle({ postData, token: LSToken })
-      .unwrap()
-      .then((res) => {
-        navigate(ROUTE_PATH.PROFILE_DYNAMIC(userName));
-      });
+    if (editMode) {
+      updateSelectedPost({ slug: slugName, postData, token: LSToken })
+        .unwrap()
+        .then((res) => {
+          navigate(ROUTE_PATH.PROFILE_DYNAMIC(userName));
+        });
+    } else {
+      postNewArticle({ postData, token: LSToken })
+        .unwrap()
+        .then((res) => {
+          navigate(ROUTE_PATH.PROFILE_DYNAMIC(userName));
+        });
+    }
   };
 
   useEffect(() => {
     getUserInfo();
+    getSelectedPostHandler();
   }, []);
 
+  const pageTitle = editMode ? "Edit your post" : "Create a new post";
+  const buttonText = editMode ? "Update post" : "Publish post";
   return (
     <>
       <Header />
@@ -93,7 +120,7 @@ export const NewArticlePage = () => {
         className={`content ${NewPost.newPostBlock} ${NewPost.adaptiveLayout}`}
       >
         <div className={NewPost.formContainer}>
-          <p className={NewPost.newPost}>Create a new post</p>
+          <p className={NewPost.newPost}>{pageTitle}</p>
           <div>
             <SimpleInput
               type={InputTypes.Text}
@@ -128,8 +155,8 @@ export const NewArticlePage = () => {
 
             <SimpleButton
               disabled={false}
-              text="Publish in global"
-              onClickFunc={() => goToPostNewArticle()}
+              text={buttonText}
+              onClickFunc={() => postActionHandler()}
             />
 
             {isNewPostLoading ? "loading" : null}
