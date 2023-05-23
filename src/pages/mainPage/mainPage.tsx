@@ -21,20 +21,18 @@ export const MainPage = () => {
     blogAPI.useLazyGetUserInfoByTokenQuery();
 
   useEffect(() => {
-    if (token) {
-      getUserInfoTrigger(token)
-        .unwrap()
-        .then((resp) => {
-          const { email, username, bio, image } = resp.user;
-          const userDataFromServer = {
-            name: username,
-            bio: bio,
-            email: email,
-            imageURL: image,
-          };
-          dispatch(userSliceActions.setIsLogined(userDataFromServer));
-        });
-    }
+    getUserInfoTrigger('')
+      .unwrap()
+      .then((resp) => {
+        const { email, username, bio, image } = resp.user;
+        const userDataFromServer = {
+          name: username,
+          bio: bio,
+          email: email,
+          imageURL: image,
+        };
+        dispatch(userSliceActions.setIsLogined(userDataFromServer));
+      });
   }, []);
 
   return (
