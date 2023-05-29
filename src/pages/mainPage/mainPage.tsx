@@ -17,23 +17,11 @@ import { localStorageService } from "../../services/LSService";
 export const MainPage = () => {
   const token = localStorageService.getToken();
   const dispatch = useAppDispatch();
-  const [getUserInfoTrigger, { data: userInfoData, isLoading, error }] =
-    blogAPI.useLazyGetUserInfoByTokenQuery();
-
-  useEffect(() => {
-    getUserInfoTrigger('')
-      .unwrap()
-      .then((resp) => {
-        const { email, username, bio, image } = resp.user;
-        const userDataFromServer = {
-          name: username,
-          bio: bio,
-          email: email,
-          imageURL: image,
-        };
-        dispatch(userSliceActions.setIsLogined(userDataFromServer));
-      });
-  }, []);
+  const {
+    data: userInfoData,
+    isLoading,
+    error,
+  } = blogAPI.useGetUserInfoByTokenQuery("");
 
   return (
     <>

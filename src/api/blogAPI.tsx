@@ -24,6 +24,8 @@ import type {
   SignUpResponse,
   SignUpInput,
 } from "../types/types";
+import { QueryLifecycleApi } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { userSliceActions } from "../store/slices/userSlice";
 
 export const blogAPI = createApi({
   reducerPath: "blogAPI",
@@ -117,10 +119,34 @@ export const blogAPI = createApi({
       }
     ),
 
+    
     getUserInfoByToken: build.query<LoginResponse, string>({
-      query: () => ({
-        url: API_URL.USER_INFO,
-      }),
+      query: () => API_URL.USER_INFO,
+
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        console.log("starting!");
+        try {
+          const { data } = await queryFulfilled;
+          console.log("success!", data);
+
+          const { email, username, bio, image } = data.user;
+          const userDataFromServer = {
+            name: username,
+            bio: bio,
+            email: email,
+            imageURL: image,
+          };
+          dispatch(userSliceActions.setIsLogined(userDataFromServer));
+        } catch (err) {
+          // dispatch(messageCreated('Error fetching posts!'))
+          console.log("error... ", err);
+        }
+      },
+
+      transformResponse: (response: LoginResponse) => {
+        console.log(`transformed`);
+        return response;
+      },
     }),
 
     getAuthorInfoByToken: build.query<AuthorInfoResponse, AuthorInfoInput>({

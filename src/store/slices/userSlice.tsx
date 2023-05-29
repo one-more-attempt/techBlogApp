@@ -9,7 +9,7 @@ export type UserStateType = {
   imageURL: string;
 };
 
-const INITIAL_STATE: UserStateType = {
+const initialState: UserStateType = {
   isLogined: false,
   userName: "",
   email: "",
@@ -19,7 +19,7 @@ const INITIAL_STATE: UserStateType = {
 
 export const userSlice = createSlice({
   name: "userSlice",
-  initialState: INITIAL_STATE,
+  initialState,
   reducers: {
     setIsLogined(
       state,
