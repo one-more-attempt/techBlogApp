@@ -12,6 +12,14 @@ export type LoginResponse = {
   };
 };
 
+export type LoginResponseTransFormed = {
+  email: string;
+  username: string;
+  bio: string;
+  image: string;
+  token: string;
+};
+
 export type SignUpInput = {
   user: {
     email: string;

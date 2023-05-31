@@ -7,71 +7,51 @@ import { Header } from "../../components/header/Header";
 import { InputTypes, SimpleInput } from "../../components/inputs/simpleInput";
 import { ROUTE_PATH } from "../../routes/routePathes";
 import { localStorageService } from "../../services/LSService";
-import { useAppDispatch } from "../../store/hooks/redux-hooks";
+import { stateSelectors } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/redux-hooks";
 import { userSliceActions } from "../../store/slices/userSlice";
 
 import Settings from "./settingsPage.module.scss";
 export const SettingsPage = () => {
-  const dispatch = useAppDispatch();
-  let LSToken = localStorageService.getToken();
-  const [email, setEmail] = useState("");
+  const userDataState = useAppSelector(stateSelectors.userSliceData);
+  const { bio, userName, email, imageURL, isLogined } = userDataState;
+  console.log(userDataState);
+
+  const [emailInput, setEmail] = useState("");
   const [image, setImage] = useState("");
   const [password, setPassword] = useState("");
-  const [bio, setBio] = useState("");
+  const [bioInput, setBio] = useState("");
   const [nickName, setNickName] = useState("");
   const [buttonStatus, setButtonStatus] = useState(true);
 
-  const [
-    getUserInfoTrigger,
-    { data: userInfoData, isLoading: isGetUserLoading },
-  ] = blogAPI.useLazyGetUserInfoByTokenQuery();
+  const {
+    data: userInfoData,
+    isLoading: userInfoIsLoading,
+    error: userInfoIsError,
+  } = blogAPI.useGetUserInfoByTokenQuery();
+
   const [updateUser, { data, error, isLoading: isUpdateUserLoading }] =
     blogAPI.useUpdateProfileMutation();
 
-  const getUserInfo = () => {
-    if (LSToken) {
-      getUserInfoTrigger(LSToken)
-        .unwrap()
-        .then((resp) => {
-          console.log(resp);
-          const { email, username, bio, image } = resp.user;
-          const userDataFromServer = {
-            email: resp.user.email,
-            name: resp.user.username,
-            bio: resp.user.bio,
-            imageURL: resp.user.image,
-          };
-
-          dispatch(userSliceActions.setIsLogined(userDataFromServer));
-          bio ? setBio(bio) : setBio("");
-          setImage(image);
-          setNickName(username);
-          setEmail(email);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  };
-
   useEffect(() => {
-    getUserInfo();
-  }, []);
+    if (isLogined) {
+      setEmail(email);
+      setImage(imageURL);
+      setBio(bio);
+      setNickName(userName);
+    }
+  }, [userDataState]);
 
   const goToUpdate = () => {
     const updateData = {
       user: {
         email: `${email}`,
-        bio,
-        image,
-        password,
+        bio: bioInput,
+        image: password,
         username: nickName,
-        token: LSToken,
       },
     };
-    updateUser({ updateData, token: LSToken }).then((resp) => {
-      getUserInfo();
-    });
+    updateUser({ updateData });
   };
 
   return (
@@ -88,18 +68,19 @@ export const SettingsPage = () => {
               placeholder={"Nickname"}
               value={nickName}
               setValue={setNickName}
+              isDisabled={true}
             />
             <SimpleInput
               type={InputTypes.Text}
               placeholder={"Image"}
               value={image}
-              setValue={setNickName}
+              setValue={setImage}
             />
 
             <SimpleInput
               type={InputTypes.Text}
               placeholder={"Email"}
-              value={email}
+              value={emailInput}
               setValue={setEmail}
             />
             <textarea
@@ -107,7 +88,7 @@ export const SettingsPage = () => {
               rows={7}
               className={Settings.bio}
               placeholder={"Short bio about you"}
-              value={bio}
+              value={bioInput}
               onChange={(e) => {
                 setBio(e.currentTarget.value);
               }}

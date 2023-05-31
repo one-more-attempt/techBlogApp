@@ -24,16 +24,17 @@ export const NewArticlePage = () => {
 
   //editMode
   const [editMode, setEditMode] = useState(!!slugName);
-
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
   const [bodyText, setBodyText] = useState("");
   const [tags, setTags] = useState("");
 
-  const [
-    getUserInfoTrigger,
-    { data: userInfoData, isLoading: isGetUserLoading },
-  ] = blogAPI.useLazyGetUserInfoByTokenQuery();
+  const {
+    data: userInfoData,
+    isLoading: userInfoIsLoading,
+    error: userInfoIsError,
+  } = blogAPI.useGetUserInfoByTokenQuery();
+
   const [postNewArticle, { data: newPostData, isLoading: isNewPostLoading }] =
     blogAPI.useNewPostMutation();
 
@@ -62,26 +63,6 @@ export const NewArticlePage = () => {
     }
   };
 
-  const getUserInfo = () => {
-    if (LSToken) {
-      getUserInfoTrigger(LSToken)
-        .unwrap()
-        .then((resp) => {
-          console.log(resp);
-          const { email, username, bio, image } = resp.user;
-          const userDataFromServer = {
-            email,
-            bio,
-            name: username,
-            imageURL: image,
-          };
-          dispatch(userSliceActions.setIsLogined(userDataFromServer));
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  };
   const postActionHandler = () => {
     const postData = {
       article: {
@@ -107,7 +88,6 @@ export const NewArticlePage = () => {
   };
 
   useEffect(() => {
-    getUserInfo();
     getSelectedPostHandler();
   }, []);
 

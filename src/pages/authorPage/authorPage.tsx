@@ -30,9 +30,12 @@ export const AuthorPage = () => {
   const [limit, setLimit] = useState(10);
   const [activePage, setActivePage] = useState(1);
 
-  const [getUserInfoTrigger, { data: userInfoData }] =
-    blogAPI.useLazyGetUserInfoByTokenQuery();
-
+  const {
+    data: userInfoData,
+    isLoading: userInfoIsLoading,
+    error: userInfoIsError,
+  } = blogAPI.useGetUserInfoByTokenQuery();
+  
   const [
     getAuthorPostsTrigger,
     {
@@ -59,22 +62,22 @@ export const AuthorPage = () => {
     if (feed === feedSelector) return Author.activeFeed;
   };
 
-  useEffect(() => {
-    if (token) {
-      getUserInfoTrigger(token)
-        .unwrap()
-        .then((resp: any) => {
-          const { email, username, bio, image } = resp.user;
-          const userDataFromServer = {
-            name: username,
-            bio: bio,
-            email: email,
-            imageURL: image,
-          };
-          dispatch(userSlice.actions.setIsLogined(userDataFromServer));
-        });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (token) {
+  //     getUserInfoTrigger(token)
+  //       .unwrap()
+  //       .then((resp: any) => {
+  //         const { email, username, bio, image } = resp.user;
+  //         const userDataFromServer = {
+  //           name: username,
+  //           bio: bio,
+  //           email: email,
+  //           imageURL: image,
+  //         };
+  //         dispatch(userSlice.actions.setIsLogined(userDataFromServer));
+  //       });
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (postsToRender === authorPosts) {

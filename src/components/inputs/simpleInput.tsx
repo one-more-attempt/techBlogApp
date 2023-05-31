@@ -9,6 +9,7 @@ type SimpleInputProps = {
   placeholder: string;
   type: InputTypes;
   value?: string;
+  isDisabled?: boolean;
   setValue: (arg: string) => any;
 };
 
@@ -17,6 +18,7 @@ export const SimpleInput = ({
   type,
   value,
   setValue,
+  isDisabled
 }: SimpleInputProps) => {
   return (
     <>
@@ -25,9 +27,9 @@ export const SimpleInput = ({
         type={type}
         placeholder={placeholder}
         value={value}
+        disabled={isDisabled}
         onChange={(e) => {
           setValue(e.currentTarget.value);
-          
         }}
       />
     </>

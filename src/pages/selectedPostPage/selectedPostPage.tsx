@@ -17,24 +17,11 @@ export const SelectedPostPage = () => {
 
   //login data
   const token = localStorageService.getToken() || "";
-  const [getUserInfoTrigger, { data: userInfoData }] =
-    blogAPI.useLazyGetUserInfoByTokenQuery();
-  useEffect(() => {
-    if (token) {
-      getUserInfoTrigger(token)
-        .unwrap()
-        .then((resp: any) => {
-          const { email, username, bio, image } = resp.user;
-          const userDataFromServer = {
-            name: username,
-            bio: bio,
-            email: email,
-            imageURL: image,
-          };
-          dispatch(userSliceActions.setIsLogined(userDataFromServer));
-        });
-    }
-  }, []);
+  const {
+    data: userInfoData,
+    isLoading: userInfoIsLoading,
+    error: userInfoIsError,
+  } = blogAPI.useGetUserInfoByTokenQuery();
 
   //post data from params
   const {

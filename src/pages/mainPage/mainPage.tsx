@@ -16,12 +16,11 @@ import { localStorageService } from "../../services/LSService";
 
 export const MainPage = () => {
   const token = localStorageService.getToken();
-  const dispatch = useAppDispatch();
   const {
     data: userInfoData,
-    isLoading,
-    error,
-  } = blogAPI.useGetUserInfoByTokenQuery("");
+    isLoading: userInfoIsLoading,
+    error: userInfoIsError,
+  } = blogAPI.useGetUserInfoByTokenQuery();
 
   return (
     <>

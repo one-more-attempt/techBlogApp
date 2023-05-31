@@ -23,6 +23,7 @@ import type {
   getAllPopularTagsResponse,
   SignUpResponse,
   SignUpInput,
+  LoginResponseTransFormed,
 } from "../types/types";
 import { QueryLifecycleApi } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import { userSliceActions } from "../store/slices/userSlice";
@@ -31,7 +32,7 @@ export const blogAPI = createApi({
   reducerPath: "blogAPI",
   baseQuery,
   // baseQuery: fetchBaseQuery({ baseUrl: `${API_URL.BASE_URL}` }),
-  tagTypes: ["post", "authorInfo", "selectedPost", "comments"],
+  tagTypes: ["post", "authorInfo", "selectedPost", "comments", "userInfo"],
   endpoints: (build) => ({
     register: build.mutation<SignUpResponse, SignUpInput>({
       query: (signUpInputData) => ({
@@ -42,12 +43,12 @@ export const blogAPI = createApi({
     }),
 
     updateProfile: build.mutation<any, any>({
-      query: ({ updateData, token }) => ({
+      query: (updateData) => ({
         url: API_URL.USER_INFO,
         method: "PUT",
         body: updateData,
-        headers: { authorization: `Token ${token}` },
       }),
+      invalidatesTags: ["userInfo"],
     }),
 
     login: build.mutation<LoginResponse, LoginInput>({
@@ -63,7 +64,6 @@ export const blogAPI = createApi({
         query: ({ token, author }) => ({
           url: `${API_URL.FOLLOW_USER(author)}`,
           method: "POST",
-          headers: { authorization: `Token ${token}` },
         }),
         invalidatesTags: ["authorInfo", "selectedPost"],
       }
@@ -119,17 +119,23 @@ export const blogAPI = createApi({
       }
     ),
 
-    
-    getUserInfoByToken: build.query<LoginResponse, string>({
-      query: () => API_URL.USER_INFO,
+    getUserInfoByToken: build.query<LoginResponseTransFormed, void>({
+      query: () => ({ url: `${API_URL.USER_INFO}s` }),
+      transformResponse: (response: LoginResponse) => {
+        const transformedResponse = { ...response.user };
+        return transformedResponse;
+      },
+      transformErrorResponse: (response: { status: string | number }) => {
+        console.log(response.status);
+        return response.status;
+      },
 
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        console.log("starting!");
+        //start
         try {
           const { data } = await queryFulfilled;
-          console.log("success!", data);
-
-          const { email, username, bio, image } = data.user;
+          //success
+          const { email, username, bio, image } = data;
           const userDataFromServer = {
             name: username,
             bio: bio,
@@ -138,15 +144,11 @@ export const blogAPI = createApi({
           };
           dispatch(userSliceActions.setIsLogined(userDataFromServer));
         } catch (err) {
-          // dispatch(messageCreated('Error fetching posts!'))
-          console.log("error... ", err);
+          //err
         }
       },
 
-      transformResponse: (response: LoginResponse) => {
-        console.log(`transformed`);
-        return response;
-      },
+      providesTags: (result) => ["userInfo"],
     }),
 
     getAuthorInfoByToken: build.query<AuthorInfoResponse, AuthorInfoInput>({
